@@ -1,7 +1,6 @@
 package dev.jorel.commandapi;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
@@ -112,16 +111,18 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 	}
 
 	@Override
-	public void postCommandRegistration(RegisteredCommand registeredCommand, LiteralCommandNode<Source> resultantNode, List<LiteralCommandNode<Source>> aliasNodes) {
+	public void postCommandRegistration(List<RegisteredCommand> registeredCommands, LiteralCommandNode<Source> resultantNode, List<LiteralCommandNode<Source>> aliasNodes) {
 		// Nothing to do
 	}
 
 	@Override
-	public LiteralCommandNode<Source> registerCommandNode(LiteralArgumentBuilder<Source> node, String namespace) {
-		LiteralCommandNode<Source> commandNode = asPluginCommand(node.build());
-		LiteralCommandNode<Source> namespacedCommandNode = asPluginCommand(CommandAPIHandler.getInstance().namespaceNode(commandNode, namespace));
+	public void registerCommandNode(LiteralCommandNode<Source> node, String namespace) {
+		CommandAPIHandler<?, ?, Source> commandAPIHandler = CommandAPIHandler.getInstance();
 
-		// Add to registered command nodes
+		LiteralCommandNode<Source> commandNode = asPluginCommand(node);
+		LiteralCommandNode<Source> namespacedCommandNode = asPluginCommand(commandAPIHandler.namespaceNode(commandNode, namespace));
+
+		// Track registered command nodes for reloads
 		registeredNodes.addChild(commandNode);
 		registeredNodes.addChild(namespacedCommandNode);
 
@@ -129,8 +130,6 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 		RootCommandNode<Source> root = getPaperDispatcher().getRoot();
 		root.addChild(commandNode);
 		root.addChild(namespacedCommandNode);
-
-		return commandNode;
 	}
 
 	@Override
