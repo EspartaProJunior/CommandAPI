@@ -19,7 +19,7 @@ inline fun CommandTree.argument(base: Argument<*>, block: Argument<*>.() -> Unit
 
 inline fun CommandTree.optionalArgument(base: Argument<*>, block: Argument<*>.() -> Unit = {}): CommandTree = withOptionalArguments(base.apply(block))
 
-inline fun CommandTree.addArgument(base: Argument<*>, optional: Boolean, block: Argument<*>.() -> Unit): CommandTree = if(optional) { optionalArgument(base, block) } else { argument(base, block) }
+inline fun CommandTree.addArgument(base: Argument<*>, optional: Boolean, block: Argument<*>.() -> Unit): CommandTree = if(optional) optionalArgument(base, block) else argument(base, block)
 
 inline fun CommandTree.nestedArguments(vararg arguments: Argument<*>,block: Argument<*>.() -> Unit = {}): CommandTree = thenNested(*arguments.also { it.last().apply(block) })
 inline fun CommandTree.nested(block: CommandTree.() -> Unit): CommandTree {
