@@ -130,6 +130,11 @@ public enum CommandAPIArgumentType {
 	ENVIRONMENT("api:environment"),
 
 	/**
+	 * The FlagsArgument
+	 */
+	FLAGS_ARGUMENT,
+
+	/**
 	 * The FloatRangeArgument
 	 */
 	FLOAT_RANGE("minecraft:float_range"),
