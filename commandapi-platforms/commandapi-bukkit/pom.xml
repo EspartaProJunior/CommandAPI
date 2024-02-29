@@ -34,6 +34,7 @@
 		<module>commandapi-bukkit-shade-mojang-mapped</module>
 
 		<module>commandapi-bukkit-test-toolkit</module>
+		<module>commandapi-bukkit-networking-plugin</module>
 
 		<!-- Tests -->
 		<module>commandapi-bukkit-test</module>
