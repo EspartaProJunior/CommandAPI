@@ -336,6 +336,7 @@ class CommandTreeRegisteredCommandTests extends TestBase {
 
 		assertCreatedRegisteredCommands(
 			registeredCommandNoHelpOrPermission("command", List.of("subcommand1:LiteralArgument", "1a:LiteralArgument", "1b:LiteralArgument")),
+			// TODO: Making rebase conflict to trigger on commit when it would be good to move thenNested test in from CommandRegistrationTests
 			registeredCommandNoHelpOrPermission("command", List.of("subcommand1:LiteralArgument", "1a:LiteralArgument", "1b:LiteralArgument", "1c:LiteralArgument", "1d:LiteralArgument")),
 			registeredCommandNoHelpOrPermission("command", List.of("subcommand2:LiteralArgument", "2a:LiteralArgument", "2b:LiteralArgument")),
 			registeredCommandNoHelpOrPermission("command", List.of("subcommand2:LiteralArgument", "2a:LiteralArgument", "2b:LiteralArgument", "2c:LiteralArgument", "2d:LiteralArgument"))
