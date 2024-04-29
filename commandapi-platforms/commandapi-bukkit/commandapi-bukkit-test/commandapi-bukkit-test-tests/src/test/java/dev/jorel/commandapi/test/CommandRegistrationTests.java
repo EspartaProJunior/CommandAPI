@@ -1,7 +1,6 @@
 package dev.jorel.commandapi.test;
 
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.CommandAPIHandler;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.exceptions.*;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for the semantics of registering commands
@@ -362,48 +360,6 @@ class CommandRegistrationTests extends TestBase {
 			.then(new LiteralArgument("path4").then(new StringArgument("alice").executesPlayer(P_EXEC)));
 
 		assertDoesNotThrow(() -> commandWithDuplicateNamesSeparated.register());
-	}
-
-	// TODO: Move this to CommandTreeRegisteredCommandTests
-	@Test
-	void testCommandTreeThenNested() {
-		// Make sure dispatcher is cleared from any previous tests
-		CommandAPIHandler.getInstance().writeDispatcherToFile();
-
-		// Register a command using the new `thenNested` method
-		new CommandTree("test").thenNested(
-			new LiteralArgument("a"),
-			new LiteralArgument("b"),
-			new LiteralArgument("c")
-				.executesPlayer(P_EXEC)
-		).register();
-
-		// Command added to tree
-		assertEquals("""
-			{
-			  "type": "root",
-			  "children": {
-			    "test": {
-			      "type": "literal",
-			      "children": {
-			        "a": {
-			          "type": "literal",
-			          "children": {
-			            "b": {
-			              "type": "literal",
-			              "children": {
-			                "c": {
-			                  "type": "literal",
-			                  "executable": true
-			                }
-			              }
-			            }
-			          }
-			        }
-			      }
-			    }
-			  }
-			}""", getDispatcherString());
 	}
 
 	@Test
