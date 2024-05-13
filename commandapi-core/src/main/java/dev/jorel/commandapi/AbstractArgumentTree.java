@@ -158,7 +158,7 @@ extends AbstractArgument<?, ?, Argument, CommandSender>
 			// Collect children into our own list
 			NodeInformation<CommandSender, Source> newPreviousNodeInformation = new NodeInformation<>(
 				previousNodeInformation.lastCommandNodes(), 
-				children -> childrenNodeInformation.addAll(children)
+				childrenNodeInformation::addAll
 			);
 
 			// We need a new list so each branch acts independently
