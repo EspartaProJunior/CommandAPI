@@ -5,16 +5,12 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import io.papermc.paper.plugin.configuration.PluginMeta;
-import org.bukkit.help.HelpTopic;
+import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -111,7 +107,7 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 	}
 
 	@Override
-	public void postCommandRegistration(RegisteredCommand registeredCommand, LiteralCommandNode<Source> resultantNode, List<LiteralCommandNode<Source>> aliasNodes) {
+	public void postCommandRegistration(RegisteredCommand<CommandSender> registeredCommand, LiteralCommandNode<Source> resultantNode, List<LiteralCommandNode<Source>> aliasNodes) {
 		// Nothing to do
 	}
 
@@ -198,33 +194,23 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 		} else {
 			namespaceStripped = commandName;
 		}
-		for (RegisteredCommand command : CommandAPI.getRegisteredCommands()) {
+		for (RegisteredCommand<?> command : CommandAPI.getRegisteredCommands()) {
 			if (command.commandName().equals(namespaceStripped) || Arrays.asList(command.aliases()).contains(namespaceStripped)) {
-				Object helpTopic = command.helpTopic().orElse(null);
-				if (helpTopic != null) {
-					return ((HelpTopic) helpTopic).getShortText();
-				} else {
-					return command.shortDescription().orElse("A command by the " + CommandAPIBukkit.getConfiguration().getPlugin().getName() + " plugin.");
-				}
+				Optional<String> shortDescription = command.helpTopic().getShortDescription();
+				return shortDescription.orElse("A command by the " + CommandAPIBukkit.getConfiguration().getPlugin().getName() + " plugin.");
 			}
 		}
 		return "";
 	}
 
 	private List<String> getAliasesForCommand(String commandName) {
-		Set<String> aliases = new HashSet<>();
 		String namespaceStripped;
 		if (commandName.contains(":")) {
 			namespaceStripped = commandName.split(":")[1];
 		} else {
 			namespaceStripped = commandName;
 		}
-		for (RegisteredCommand command : CommandAPI.getRegisteredCommands()) {
-			if (command.commandName().equals(namespaceStripped)) {
-				aliases.addAll(Arrays.asList(command.aliases()));
-			}
-		}
-		return new ArrayList<>(aliases);
+		return List.of(CommandAPIHandler.getInstance().registeredCommands.get(namespaceStripped).aliases());
 	}
 
 }
