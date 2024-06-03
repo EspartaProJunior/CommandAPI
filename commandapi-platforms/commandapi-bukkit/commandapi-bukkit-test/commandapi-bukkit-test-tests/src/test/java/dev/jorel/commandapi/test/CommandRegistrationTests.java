@@ -4,7 +4,7 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.exceptions.*;
-import dev.jorel.commandapi.executors.PlayerExecutionInfo;
+import dev.jorel.commandapi.executors.NormalExecutorInfo;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -368,8 +368,8 @@ class CommandRegistrationTests extends TestBase {
 		Player player = server.addPlayer();
 
 		// The executor we register first should not be overwritten and should always run
-		PlayerExecutionInfo firstExecutor = info -> {results.set("first");};
-		PlayerExecutionInfo secondExecutor = info -> {results.set("second");};
+		NormalExecutorInfo<Player, ?> firstExecutor = info -> results.set("first");
+		NormalExecutorInfo<Player, ?> secondExecutor = info -> results.set("second");
 
 		// No arguments
 		new CommandAPICommand("noArguments")
