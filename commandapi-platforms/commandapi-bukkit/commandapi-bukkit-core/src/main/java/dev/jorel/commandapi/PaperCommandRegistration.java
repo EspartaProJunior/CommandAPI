@@ -130,8 +130,10 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 
 	@Override
 	public void unregister(String commandName, boolean unregisterNamespaces, boolean unregisterBukkit) {
+		CommandAPIHandler<?, ?, Source> handler = CommandAPIHandler.getInstance();
+
 		// Remove nodes from the  dispatcher
-		removeBrigadierCommands(getPaperDispatcher().getRoot(), commandName, unregisterNamespaces,
+		handler.removeBrigadierCommands(getPaperDispatcher().getRoot(), commandName, unregisterNamespaces,
 			// If we are unregistering a Bukkit command, ONLY unregister BukkitCommandNodes
 			// If we are unregistering a Vanilla command, DO NOT unregister BukkitCommandNodes
 			c -> !unregisterBukkit ^ isBukkitCommand.test(c));
@@ -139,11 +141,8 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 		// CommandAPI commands count as non-Bukkit
 		if (!unregisterBukkit) {
 			// Don't add nodes back after a reload
-			removeBrigadierCommands(registeredNodes, commandName, unregisterNamespaces, c -> true);
+			handler.removeBrigadierCommands(registeredNodes, commandName, unregisterNamespaces, c -> true);
 		}
-
-		// Update the dispatcher file
-		CommandAPIHandler.getInstance().writeDispatcherToFile();
 	}
 
 	@Override
