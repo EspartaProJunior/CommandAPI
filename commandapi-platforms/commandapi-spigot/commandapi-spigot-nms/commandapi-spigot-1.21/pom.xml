@@ -12,9 +12,9 @@
 	<artifactId>commandapi-spigot-1.21</artifactId>
 
 	<properties>
-		<minecraft.mappings>1.21-R0.1-SNAPSHOT</minecraft.mappings>
-		<spigot.version>1.21-R0.1-SNAPSHOT</spigot.version>
-		<paper.version>1.20.4-R0.1-SNAPSHOT</paper.version>
+		<minecraft.mappings>1.21.1-R0.1-SNAPSHOT</minecraft.mappings>
+		<spigot.version>1.21.1-R0.1-SNAPSHOT</spigot.version>
+		<paper.version>1.21-R0.1-SNAPSHOT</paper.version>
 	</properties>
 
 	<repositories>
