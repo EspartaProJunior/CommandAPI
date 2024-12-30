@@ -26,7 +26,6 @@
 		<!-- Test toolkit - needs work => TODO
 		<module>commandapi-bukkit-test-toolkit</module> -->
 
-		<!-- Tests do not compile at this time. This is a big todo
-		<module>commandapi-bukkit-test</module>-->
+		<module>commandapi-bukkit-test</module>
 	</modules>
 </project>
