@@ -31,8 +31,8 @@ public interface ConfigurationAdapter<Configuration> {
 
 	void saveToFile() throws IOException;
 
-	default void saveDefaultConfig(DefaultConfig defaultConfig, File directory, Logger logger) {
-		ConfigGenerator generator = ConfigGenerator.createNew(defaultConfig);
+	default void saveConfig(DefaultConfig config, File directory, Logger logger) {
+		ConfigGenerator generator = ConfigGenerator.createNew(config);
 		ConfigurationAdapter<Configuration> existingConfig;
 		if (!directory.exists()) {
 			if (!directory.mkdirs()) {
