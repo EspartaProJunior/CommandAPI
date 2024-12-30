@@ -34,7 +34,7 @@ public class PaperNMS_1_16_R3 extends CommandAPIPaper<CommandListenerWrapper> {
 	}
 
 	@Override
-	public final Component getChatComponent(CommandContext<CommandListenerWrapper> cmdCtx, String key) {
+	public final Component getChatComponent(CommandContext<CommandListenerWrapper> cmdCtx, String key) throws CommandSyntaxException {
 		return GsonComponentSerializer.gson().deserialize(IChatBaseComponent.ChatSerializer.a(ArgumentChatComponent.a(cmdCtx, key)));
 	}
 

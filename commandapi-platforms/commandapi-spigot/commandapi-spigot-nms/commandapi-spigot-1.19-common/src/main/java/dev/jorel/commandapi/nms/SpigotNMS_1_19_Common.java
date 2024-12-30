@@ -24,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import static dev.jorel.commandapi.preprocessor.Unimplemented.REASON.VERSION_SPECIFIC_IMPLEMENTATION;
 
-public abstract class SpigotNMS_1_19_Common extends SpigotNMS_CommonWithFunctions {
+public abstract class SpigotNMS_1_19_Common extends SpigotNMS_Common {
 
 	@Override
 	public void onEnable() {

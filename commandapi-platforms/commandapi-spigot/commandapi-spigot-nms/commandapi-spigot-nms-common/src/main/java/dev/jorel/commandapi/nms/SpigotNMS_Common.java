@@ -21,8 +21,4 @@ public abstract class SpigotNMS_Common extends CommandAPISpigot<CommandSourceSta
 	@Override
 	public abstract BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key);
 
-	@Override
-	public NMS<?> bukkitNMS() {
-		return null;
-	}
 }

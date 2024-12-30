@@ -15,7 +15,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.v1_19_R3.command.BukkitCommandWrapper;
 import org.bukkit.craftbukkit.v1_19_R3.command.VanillaCommandWrapper;
 
-public class SpigotNMS_1_19_4_R3 extends SpigotNMS_CommonWithFunctions {
+public class SpigotNMS_1_19_4_R3 extends SpigotNMS_Common {
 
 	private NMS_1_19_4_R3 bukkitNMS;
 
