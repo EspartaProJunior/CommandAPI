@@ -80,7 +80,7 @@ public abstract class CommandAPIPaper<Source> extends CommandAPIBukkit<Source> i
 	}
 
 	@Override
-	public void onLoad(CommandAPIConfig<? extends CommandAPIConfig<?>> config) {
+	public void onLoad(CommandAPIConfig<?> config) {
 		if (config instanceof CommandAPIPaperConfig paperConfig) {
 			CommandAPIPaper.setInternalConfig(new InternalPaperConfig(paperConfig));
 		} else {

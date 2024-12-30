@@ -55,7 +55,7 @@ public abstract class CommandAPISpigot<Source> extends CommandAPIBukkit<Source> 
 	}
 
 	@Override
-	public void onLoad(CommandAPIConfig<? extends CommandAPIConfig<?>> config) {
+	public void onLoad(CommandAPIConfig<?> config) {
 		if (config instanceof CommandAPISpigotConfig spigotConfig) {
 			CommandAPISpigot.setInternalConfig(new InternalSpigotConfig(spigotConfig));
 		} else {

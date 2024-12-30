@@ -15,7 +15,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.craftbukkit.v1_17_R1.command.BukkitCommandWrapper;
 import org.bukkit.craftbukkit.v1_17_R1.command.VanillaCommandWrapper;
 
-public class PaperNMS_1_17_Common extends PaperNMS_Common {
+public abstract class PaperNMS_1_17_Common extends PaperNMS_Common {
 
 	@Override
 	public NamedTextColor getChatColor(CommandContext<CommandSourceStack> cmdCtx, String key) {
