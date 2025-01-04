@@ -6,7 +6,7 @@ public class InternalPaperConfig extends InternalBukkitConfig {
 	private final boolean shouldHookPaperReload;
 
 	public InternalPaperConfig(CommandAPIPaperConfig config) {
-		super(config, config.skipReloadDatapacks);
+		super(config);
 		this.shouldHookPaperReload = config.shouldHookPaperReload;
 	}
 

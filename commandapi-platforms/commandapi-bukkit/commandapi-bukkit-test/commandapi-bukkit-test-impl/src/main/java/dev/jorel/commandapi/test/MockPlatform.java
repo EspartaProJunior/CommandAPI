@@ -1,42 +1,49 @@
 package dev.jorel.commandapi.test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.bukkit.Keyed;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
-import org.bukkit.Registry;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFactory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
+import dev.jorel.commandapi.*;
+import dev.jorel.commandapi.commandsenders.*;
+import dev.jorel.commandapi.nms.NMS;
+import dev.jorel.commandapi.wrappers.NativeProxyCommandSender;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
+import org.bukkit.help.HelpTopic;
+import org.bukkit.inventory.ItemFactory;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mockito.Mockito;
 
-import dev.jorel.commandapi.CommandAPIBukkit;
-import dev.jorel.commandapi.SafeVarHandle;
-import dev.jorel.commandapi.wrappers.ParticleData;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.security.CodeSource;
+import java.util.*;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
+/**
+ * An implementation of {@link CommandAPIBukkit} for the test environment.
+ * Not made specifically for Spigot or Paper.
+ */
+public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> implements Enums {
+	// TODO: Does this work here, or is it actually version-specific?
+	static {
+		CodeSource src = PotionEffectType.class.getProtectionDomain().getCodeSource();
+		if (src != null) {
+			System.err.println("Loading PotionEffectType sources from " + src.getLocation());
+		}
+	}
+
 	/*****************
 	 * Instantiation *
 	 *****************/
@@ -53,12 +60,53 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 			MockPlatform.instance = this;
 		} else {
 			// wtf why was this called twice?
+			throw new IllegalStateException("MockPlatform loaded twice? I don't think this should happen!");
 		}
+
+		setInstance(this);
 	}
 	
 	public static void unload() {
 		MockPlatform.instance = null;
 	}
+
+	/***********
+	 * NMS Spy *
+	 ***********/
+
+	protected void createNMSSpy(NMS<CLW> baseNMS) {
+		// Set up a Mockito spy
+		//  We want to forward most methods to the original implementation so we
+		//  can test that code, but we need to override some methods to help them
+		//  play nice with MockBukkit.
+		NMS<CLW> spy = Mockito.spy(baseNMS);
+
+		// Version-specific setup
+		setupNMSSpy(spy);
+
+		// General setup
+		// Ignore, nothing to do here
+		Mockito.doNothing().when(spy).reloadDataPacks();
+
+		// Stub in our getMinecraftServer implementation
+		Mockito.doAnswer(i -> getMinecraftServer()).when(spy).getMinecraftServer();
+		// Stub in our getSimpleCommandMap implementation
+		//  nms throws a class cast exception  (`CraftServer` vs `CommandAPIServerMock`)
+		Mockito.doAnswer(i -> getSimpleCommandMap()).when(spy).getSimpleCommandMap();
+		// Stub in our getHelpMap implementation
+		//  nms throws a class cast exception (`SimpleHelpMap` vs `HelpMapMock`)
+		Mockito.doAnswer(i -> getHelpMap()).when(spy).getHelpMap();
+
+		this.nms = spy;
+	}
+
+	protected abstract void setupNMSSpy(NMS<CLW> spy);
+
+	public abstract <T> T getMinecraftServer();
+
+	public abstract SimpleCommandMap getSimpleCommandMap();
+
+	public abstract Map<String, HelpTopic> getHelpMap();
 
 	/************************************
 	 * CommandAPIBukkit implementations *
@@ -75,29 +123,72 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 		return resourcesDispatcher;
 	}
 
-	@Override
-	public final String convert(ItemStack is) {
-		throw new UnimplementedError();
+	private static void setInternalConfig(InternalBukkitConfig config) {
+		CommandAPIBukkit.config = config;
 	}
 
 	@Override
-	public final String convert(ParticleData<?> particle) {
-		throw new UnimplementedError();
+	public void onLoad(CommandAPIConfig<?> config) {
+		if (config instanceof MockCommandAPIBukkitConfig mockConfig) {
+			setInternalConfig(new MockInternalBukkitConfig(mockConfig));
+		} else {
+			CommandAPI.logError("CommandAPIBukkit was loaded with non-Bukkit config!");
+			CommandAPI.logError("Attempts to access Bukkit-specific config variables will fail!");
+		}
+		super.onLoad();
+	}
+
+	// Below is copied from Spigot
+	@Override
+	public void onEnable() {
+		JavaPlugin plugin = getConfiguration().getPlugin();
+
+		Bukkit.getScheduler().runTaskLater(plugin, () -> {
+			// Sort out permissions after the server has finished registering them all
+			getCommandRegistrationStrategy().runTasksAfterServerStart();
+			if (!getConfiguration().skipReloadDatapacks()) {
+				reloadDataPacks();
+			}
+			updateHelpForCommands(CommandAPI.getRegisteredCommands());
+		}, 0L);
+
+		super.stopCommandRegistrations();
 	}
 
 	@Override
-	public final String convert(PotionEffectType potion) {
-		throw new UnimplementedError();
+	public CommandMap getCommandMap() {
+		return getSimpleCommandMap();
 	}
 
 	@Override
-	public final String convert(Sound sound) {
-		throw new UnimplementedError();
+	public Platform activePlatform() {
+		return Platform.SPIGOT;
 	}
 
 	@Override
-	public final void reloadDataPacks() {
-		assert true; // Nothing to do here
+	public BukkitCommandSender<? extends CommandSender> wrapCommandSender(CommandSender sender) {
+		if (sender instanceof BlockCommandSender block) {
+			return new BukkitBlockCommandSender(block);
+		}
+		if (sender instanceof ConsoleCommandSender console) {
+			return new BukkitConsoleCommandSender(console);
+		}
+		if (sender instanceof Player player) {
+			return new BukkitPlayer(player);
+		}
+		if (sender instanceof org.bukkit.entity.Entity entity) {
+			return new BukkitEntity(entity);
+		}
+		if (sender instanceof NativeProxyCommandSender nativeProxy) {
+			return new BukkitNativeProxyCommandSender(nativeProxy);
+		}
+		if (sender instanceof ProxiedCommandSender proxy) {
+			return new BukkitProxiedCommandSender(proxy);
+		}
+		if (sender instanceof RemoteConsoleCommandSender remote) {
+			return new BukkitRemoteConsoleCommandSender(remote);
+		}
+		throw new RuntimeException("Failed to wrap CommandSender " + sender + " to a CommandAPI-compatible BukkitCommandSender");
 	}
 
 	/******************
@@ -114,7 +205,7 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 			field.setAccessible(true);
 			return field.get(instance);
 		} catch (ReflectiveOperationException e) {
-			return null;
+			throw new IllegalStateException("Reflection failed :(", e);
 		}
 	}
 
@@ -128,7 +219,7 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 			field.setAccessible(true);
 			field.set(instance, value);
 		} catch (ReflectiveOperationException e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Reflection failed :(", e);
 		}
 	}
 
@@ -142,7 +233,7 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 			field.setAccessible(true);
 			return asType.cast(field.get(instance));
 		} catch (ReflectiveOperationException e) {
-			return null;
+			throw new IllegalStateException("Reflection failed :(", e);
 		}
 	}
 
@@ -159,7 +250,7 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 	public abstract ItemFactory getItemFactory();
 
 	public abstract org.bukkit.advancement.Advancement addAdvancement(NamespacedKey key);
-	
+
 	public abstract void addFunction(NamespacedKey key, List<String> commands);
 	public abstract void addTag(NamespacedKey key, List<List<String>> commands);
 
@@ -168,12 +259,12 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 	/**
 	 * Converts 1.16.5 and below potion effect names to NamespacedKey names. For
 	 * example, converts "effect.minecraft.speed" into "minecraft:speed"
-	 * 
+	 *
 	 * @param potionEffectType the potion effect to get the namespaced key for
 	 * @return a Minecraft namespaced key name for a potion effect
 	 */
 	public abstract String getBukkitPotionEffectTypeName(PotionEffectType potionEffectType);
-	
+
 	public abstract String getNMSParticleNameFromBukkit(Particle particle);
 	
 	// Overrideable
@@ -228,29 +319,6 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 		
 		return list;
 	}
-	
-	@SuppressWarnings("serial")
-	private static class UnimplementedError extends Error {
-		public UnimplementedError() {
-			super("Unimplemented");
-		}
-	}
-
-	/***********************
-	 * Bukkit "enum" lists *
-	 ***********************/
-
-	public abstract org.bukkit.enchantments.Enchantment[] getEnchantments();
-
-	public abstract org.bukkit.entity.EntityType[] getEntityTypes();
-
-	public abstract org.bukkit.loot.LootTables[] getLootTables();
-
-	public abstract PotionEffectType[] getPotionEffects();
-	
-	public abstract Sound[] getSounds();
-	
-	public abstract org.bukkit.block.Biome[] getBiomes();
 
 	/**
 	 * @return A list of all item names, sorted in alphabetical order. Each item
@@ -299,5 +367,4 @@ public abstract class MockPlatform<CLW> extends CommandAPIBukkit<CLW> {
 			}
 		};
 	}
-
 }

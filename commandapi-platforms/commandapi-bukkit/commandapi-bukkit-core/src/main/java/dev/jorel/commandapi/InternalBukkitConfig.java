@@ -18,7 +18,7 @@ public abstract class InternalBukkitConfig extends InternalConfig {
 	 *
 	 * @param config The configuration to use to set up this internal configuration
 	 */
-	public InternalBukkitConfig(CommandAPIBukkitConfig<? extends CommandAPIBukkitConfig<?>> config, boolean skipReloadDatapacks) {
+	public InternalBukkitConfig(CommandAPIBukkitConfig<? extends CommandAPIBukkitConfig<?>> config) {
 		super(config);
 		this.plugin = config.plugin;
 		this.skipReloadDatapacks = config.skipReloadDatapacks;

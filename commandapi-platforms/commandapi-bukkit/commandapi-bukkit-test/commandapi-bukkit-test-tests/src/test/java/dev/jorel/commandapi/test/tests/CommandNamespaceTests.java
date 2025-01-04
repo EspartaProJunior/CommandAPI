@@ -7,9 +7,7 @@ import dev.jorel.commandapi.*;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
-import dev.jorel.commandapi.test.MockPlatform;
-import dev.jorel.commandapi.test.Mut;
-import dev.jorel.commandapi.test.TestBase;
+import dev.jorel.commandapi.test.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -931,60 +929,60 @@ public class CommandNamespaceTests extends TestBase {
 
 	@Test
 	public void testConfigNamespace() {
-		CommandAPIBukkitConfig config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin());
-		InternalBukkitConfig internalConfig = new InternalBukkitConfig(config);
+		MockCommandAPIBukkitConfig config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin());
+		InternalBukkitConfig internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace wasn't changed so it should default to minecraft
 		assertEquals("minecraft", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin());
-		CommandAPIBukkitConfig finalConfig = config;
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin());
+		MockCommandAPIBukkitConfig finalConfig = config;
 
 		// The namespace is set to null, this should throw a NPE
 		assertThrows(NullPointerException.class, () -> finalConfig.setNamespace(null));
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.setNamespace("");
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace was set to an empty namespace so this should result in the default minecraft namespace
 		assertEquals("minecraft", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.setNamespace("custom");
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace was set to a non-empty, non-null custom namespace, this should be valid
 		assertEquals("custom", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.usePluginNamespace();
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace was set to use the plugin name as the namespace, this should be valid
 		assertEquals("commandapitest", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.setNamespace("custom")
 			.usePluginNamespace();
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace was first set to a custom one, then was set to use the plugin name. This should be valid and the plugin name should be the namespace
 		assertEquals("commandapitest", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.setNamespace("custom")
 			.usePluginNamespace()
 			.setNamespace("custom");
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace was first set to a custom one, then was set to use the plugin name, then was set to use a custom one
 		// usePluginNamespace() should take priority and the plugin name should be the namespace
 		assertEquals("commandapitest", internalConfig.getNamespace());
 
-		config = new CommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
+		config = new MockCommandAPIBukkitConfig(MockPlatform.getConfiguration().getPlugin())
 			.setNamespace("Custom");
-		internalConfig = new InternalBukkitConfig(config);
+		internalConfig = new MockInternalBukkitConfig(config);
 
 		// The namespace uses invalid characters so the namespace should default to minecraft
 		assertEquals("minecraft", internalConfig.getNamespace());

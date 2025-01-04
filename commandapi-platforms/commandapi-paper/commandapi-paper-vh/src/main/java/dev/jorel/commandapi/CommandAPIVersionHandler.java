@@ -19,7 +19,7 @@ import dev.jorel.commandapi.nms.PaperNMS_1_21_R2;
 import dev.jorel.commandapi.nms.PaperNMS_1_21_R3;
 import org.bukkit.Bukkit;
 
-public interface CommandAPIVersionHandler {
+public abstract class CommandAPIVersionHandler {
 
 	static LoadContext getPlatform() {
 		String latestMajorVersion = "21"; // Change this for Minecraft's major update

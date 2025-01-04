@@ -128,7 +128,7 @@ class OnEnableTests extends TestBase {
 			}""", getDispatcherString());
 
 		// Make sure command and its aliases exist in the Bukkit CommandMap
-		SimpleCommandMap commandMap = CommandAPIBukkit.get().getSimpleCommandMap();
+		SimpleCommandMap commandMap = CommandAPIBukkit.get().getNMS().getSimpleCommandMap();
 		SpigotCommandRegistration<?> spigotCommandRegistration = (SpigotCommandRegistration<?>) CommandAPIBukkit.get().getCommandRegistrationStrategy();
 
 		Command mainCommand = commandMap.getCommand("command");

@@ -113,7 +113,6 @@ class CommandUnregisterTests extends TestBase {
 	@BeforeEach
 	public void setUp() {
 		super.setUp();
-		disablePaperImplementations();
 
 		player = server.addPlayer();
 
@@ -133,7 +132,7 @@ class CommandUnregisterTests extends TestBase {
 		assertStoresResult(player, "minecraft:test word", vanillaResults, "word");
 
 		// Set up a Bukkit command
-		commandMap = CommandAPIBukkit.get().getSimpleCommandMap();
+		commandMap = CommandAPIBukkit.get().getNMS().getSimpleCommandMap();
 
 		bukkitResults = Mut.of();
 		bukkitCommand = new Command("test") {

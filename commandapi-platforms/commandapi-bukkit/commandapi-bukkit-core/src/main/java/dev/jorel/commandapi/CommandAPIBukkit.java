@@ -43,12 +43,15 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// TODO: This comment seems incorrect since it no longer implements NMS
 // CommandAPIBukkit needs all of the methods fromNMS, so it implements NMS.
 // Our implementation of CommandAPIBukkit is now derived
 // using the version handler (and thus, deferred to our NMS-specific implementations)
 public abstract class CommandAPIBukkit<Source> implements BukkitPlatform<Source> {
 
 	// References to utility classes
+	// TODO: This seems odd, CommandAPIBukkit is instanceof BukkitPlatform, and these objects do always end
+	//  up being set to the same value. It seems like only the CommandAPIBukkit variable is necessary?
 	private static BukkitPlatform<?> instance;
 	private static CommandAPIBukkit<?> bukkit;
 	protected static InternalBukkitConfig config;
@@ -131,7 +134,7 @@ public abstract class CommandAPIBukkit<Source> implements BukkitPlatform<Source>
 			}
 		}
 
-		commandRegistrationStrategy = ((BukkitPlatform<Source>) instance).createCommandRegistrationStrategy();
+		commandRegistrationStrategy = createCommandRegistrationStrategy();
 	}
 
 	/*
@@ -198,7 +201,7 @@ public abstract class CommandAPIBukkit<Source> implements BukkitPlatform<Source>
 		return usages;
 	}
 
-	void updateHelpForCommands(List<RegisteredCommand> commands) {
+	protected void updateHelpForCommands(List<RegisteredCommand> commands) {
 		Map<String, HelpTopic> helpTopicsToAdd = new HashMap<>();
 		Set<String> namespacedCommandNames = new HashSet<>();
 
@@ -290,11 +293,6 @@ public abstract class CommandAPIBukkit<Source> implements BukkitPlatform<Source>
 	@Override
 	public void onDisable() {
 		// Nothing to do
-	}
-
-	@Override
-	public BukkitCommandSender<? extends CommandSender> wrapCommandSender(CommandSender sender) {
-		return instance.wrapCommandSender(sender);
 	}
 
 	@Override

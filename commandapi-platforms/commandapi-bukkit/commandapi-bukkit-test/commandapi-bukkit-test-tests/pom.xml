@@ -76,21 +76,6 @@
 			<version>1.2.9</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>5.11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>dev.jorel</groupId>
-			<artifactId>commandapi-bukkit-test-impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>dev.jorel</groupId>
-			<artifactId>commandapi-bukkit-plugin-common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<!-- NBT API implementations (in no particular order) -->
 		<dependency>
@@ -106,13 +91,6 @@
 			<artifactId>rtag</artifactId>
 			<version>1.4.4</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<!-- Semantic Versioning to allow only running certain tests on certain versions -->
-		<dependency>
-			<groupId>com.github.zafarkhaja</groupId>
-			<artifactId>java-semver</artifactId>
-			<version>0.9.0</version>
 		</dependency>
 	</dependencies>
 
@@ -170,6 +148,7 @@
 		</plugins>
 	</build>
 
+	<!-- Version specific test dependencies - includes the CommandAPI test implementations -->
 	<profiles>
 
 		<!--
@@ -416,6 +395,22 @@
 					<version>${project.version}</version>
 					<scope>test</scope>
 				</dependency>
+				<!-- TODO: We also need to be able to access the NMS-common classes, which we do here just adding the dependency again
+						    Is it possible to have nms-common as a transitive dependency, so it is automatically available when using -1.20?
+						    In general whenever we reference an nms module we tend to need to include its dependencies as well, which is
+						    annoyingly verbose and prone to cause bugs when forgotten. -->
+				<dependency>
+					<groupId>dev.jorel</groupId>
+					<artifactId>commandapi-bukkit-1.20</artifactId>
+					<version>${project.version}</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>dev.jorel</groupId>
+					<artifactId>commandapi-bukkit-nms-common</artifactId>
+					<version>${project.version}</version>
+					<scope>test</scope>
+				</dependency>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
 					<artifactId>spigot</artifactId>
@@ -455,13 +450,21 @@
 				</dependency>
 				<dependency>
 					<groupId>dev.jorel</groupId>
-					<artifactId>commandapi-bukkit-nms-dependency-mojang-mapped</artifactId>
+					<artifactId>commandapi-bukkit-test-impl-1.20</artifactId>
 					<version>${project.version}</version>
-					<type>pom</type>
+					<classifier>mojang-mapped</classifier>
+					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>dev.jorel</groupId>
-					<artifactId>commandapi-bukkit-test-impl-1.20</artifactId>
+					<artifactId>commandapi-bukkit-1.20</artifactId>
+					<version>${project.version}</version>
+					<classifier>mojang-mapped</classifier>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>dev.jorel</groupId>
+					<artifactId>commandapi-bukkit-nms-common</artifactId>
 					<version>${project.version}</version>
 					<classifier>mojang-mapped</classifier>
 					<scope>test</scope>

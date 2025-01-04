@@ -20,11 +20,11 @@ public class Main extends JavaPlugin {
 	public void onLoad() {
 		getDataFolder().mkdirs();
 		CommandAPI.setLogger(CommandAPILogger.fromJavaLogger(getLogger()));
-		
-		CommandAPIBukkitConfig config = new CommandAPIBukkitConfig(this)
-		.useLatestNMSVersion(true) // Doesn't matter because we implement CommandAPIVersionHandler here
-		.silentLogs(true)
-		.dispatcherFile(new File(getDataFolder(), "command_registration.json"));
+
+		MockCommandAPIBukkitConfig config = new MockCommandAPIBukkitConfig(this)
+			.useLatestNMSVersion(true) // Doesn't matter because we implement CommandAPIVersionHandler here
+			.silentLogs(true)
+			.dispatcherFile(new File(getDataFolder(), "command_registration.json"));
 		
 		if (nbtContainerClass != null && nbtContainerConstructor != null) {
 			config = config.initializeNBTAPI(nbtContainerClass, nbtContainerConstructor);

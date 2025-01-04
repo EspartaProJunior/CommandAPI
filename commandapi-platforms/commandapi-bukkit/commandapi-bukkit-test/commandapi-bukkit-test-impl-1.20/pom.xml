@@ -98,6 +98,13 @@
 
 		<!-- Version-specific dependencies -->
 		<dependency>
+			<groupId>dev.jorel</groupId>
+			<artifactId>commandapi-bukkit-1.20</artifactId>
+			<version>${project.version}</version>
+			<classifier>mojang-mapped</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
 			<version>${spigot.version}</version>
@@ -114,6 +121,18 @@
 			<artifactId>paper-api</artifactId>
 			<version>${paper.version}</version>
 		</dependency> -->
+
+		<!-- TODO: We also need to be able to access the NMS-common classes, which we do here just adding the dependency again
+		      Is it possible to have nms-common as a transitive dependency, so it is automatically available when using -1.20?
+		      In general whenever we reference an nms module we tend to need to include its dependencies as well, which is
+		      annoyingly verbose and prone to cause bugs when forgotten. -->
+		<dependency>
+			<groupId>dev.jorel</groupId>
+			<artifactId>commandapi-bukkit-nms-common</artifactId>
+			<version>${project.version}</version>
+			<classifier>mojang-mapped</classifier>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
