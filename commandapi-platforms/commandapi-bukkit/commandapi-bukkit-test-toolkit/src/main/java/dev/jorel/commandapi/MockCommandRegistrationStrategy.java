@@ -33,7 +33,7 @@ public class MockCommandRegistrationStrategy extends CommandRegistrationStrategy
 	}
 
 	@Override
-	public void postCommandRegistration(List<RegisteredCommand> registeredCommands, LiteralCommandNode<MockCommandSource> resultantNode, List<LiteralCommandNode<MockCommandSource>> aliasNodes) {
+	public void postCommandRegistration(RegisteredCommand<CommandSender> registeredCommand, LiteralCommandNode<MockCommandSource> resultantNode, List<LiteralCommandNode<MockCommandSource>> aliasNodes) {
 		// Nothing to do
 	}
 

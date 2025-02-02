@@ -6,7 +6,6 @@ import dev.jorel.commandapi.CommandAPIExecutor;
 import dev.jorel.commandapi.CommandAPIHandler;
 import dev.jorel.commandapi.MockCommandSource;
 import dev.jorel.commandapi.arguments.Argument;
-import dev.jorel.commandapi.commandsenders.AbstractCommandSender;
 import org.bukkit.command.CommandSender;
 import org.mockito.Mockito;
 
@@ -40,11 +39,8 @@ public class CommandAPIHandlerSpy {
 	}
 
 	// Intercepted methods
-	private Command<MockCommandSource> generateBrigadierCommand(
-		List<Argument<?>> arguments,
-		CommandAPIExecutor<CommandSender, AbstractCommandSender<? extends CommandSender>> executor
-	) {
-		CommandAPIExecutor<CommandSender, AbstractCommandSender<? extends CommandSender>> spyExecutor = Mockito.spy(executor);
+	private Command<MockCommandSource> generateBrigadierCommand(List<Argument<?>> arguments, CommandAPIExecutor<CommandSender> executor) {
+		CommandAPIExecutor<CommandSender> spyExecutor = Mockito.spy(executor);
 
 		try {
 			// Not using Mockito.when to avoid calling real executes method
