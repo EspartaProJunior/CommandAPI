@@ -3,6 +3,7 @@ package dev.jorel.commandapi.commandnodes;
 import com.google.gson.JsonArray;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedArgument;
@@ -70,6 +71,27 @@ public class DynamicMultiLiteralCommandNode<CommandSender, Source> extends Diffe
 				.executes(node.getCommand())
 				.requires(node.getRequirement())
 				.forward(node.getRedirect(), node.getRedirectModifier(), node.isFork())
+				.build();
+
+			for (CommandNode<Source> child : node.getChildren()) {
+				result.addChild(child);
+			}
+
+			return List.of(result);
+		}
+
+		if (client == null) {
+			// Triggers on Spigot, we will send this node directly to a client (onRegister == false), but we don't know
+			//  the client. Best we can do in this case is be a StringArgument with server-side suggestions. This means
+			//  invalid literals will show up as correct on the client, but that's less confusing than correct literals
+			//  possibly showing up as invalid or the suggestions being incomplete. Note that doing this only affects
+			//  the suggestions, as server-side the command will be parsed as intended.
+			CommandNode<Source> result = RequiredArgumentBuilder
+				.<Source, String>argument(node.getName(), StringArgumentType.word())
+				.executes(node.getCommand())
+				.requires(node.getRequirement())
+				.forward(node.getRedirect(), node.getRedirectModifier(), node.isFork())
+				.suggests(this::listSuggestions)
 				.build();
 
 			for (CommandNode<Source> child : node.getChildren()) {

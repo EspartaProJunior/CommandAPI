@@ -3,6 +3,7 @@ package dev.jorel.commandapi.arguments;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import dev.jorel.commandapi.commandnodes.DynamicMultiLiteralArgumentBuilder;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface DynamicMultiLiteralArgumentCommon<Argument
@@ -13,7 +14,7 @@ extends AbstractArgument<?, ?, ?, ?>
 	// DynamicMultiLiteralArgument info
 	@FunctionalInterface
 	interface LiteralsCreator<CommandSender> {
-		List<String> createLiterals(CommandSender sender);
+		List<String> createLiterals(@Nullable CommandSender sender);
 	}
 
 	LiteralsCreator<CommandSender> getLiteralsCreator();
