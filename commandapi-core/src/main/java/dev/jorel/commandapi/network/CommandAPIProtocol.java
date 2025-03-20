@@ -32,11 +32,10 @@ public enum CommandAPIProtocol {
 	);
 
 	// Global channel variables
-	// TODO: If the first released version of the CommandAPI that can receive messages is not 9.0.4, change this description
 	/**
 	 * The current version of the protocol. This should be incremented when the protocol is updated to indicate a large
 	 * change. A connection without a communicating instance of the CommandAPI (either no CommandAPI instance or a version
-	 * before 9.0.4) should be treated as protocol version 0.
+	 * before 10.0.0) should be treated as protocol version 0.
 	 * <p>
 	 * This version number is used to communicate the capabilities of the CommandAPI instance on the other end of the
 	 * connection. The instance with the higher version should take responsibility to not send anything the lower version
