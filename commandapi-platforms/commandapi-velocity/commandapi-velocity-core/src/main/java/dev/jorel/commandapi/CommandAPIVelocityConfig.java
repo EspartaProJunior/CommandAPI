@@ -20,7 +20,6 @@ public class CommandAPIVelocityConfig extends CommandAPIConfig<CommandAPIVelocit
 	 * @param server The {@link ProxyServer} that the CommandAPI is running on.
 	 * @param plugin The plugin object (annotated by {@link Plugin}) loading the CommandAPI.
 	 *               This is used when registering events.
-	 * @param plugin The plugin that is loading the CommandAPI.
 	 */
 	public CommandAPIVelocityConfig(ProxyServer server, Object plugin) {
 		this.server = server;
