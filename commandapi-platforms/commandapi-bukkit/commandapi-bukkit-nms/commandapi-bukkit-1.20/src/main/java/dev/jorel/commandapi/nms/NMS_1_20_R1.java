@@ -245,7 +245,7 @@ public class NMS_1_20_R1 extends NMS_CommonWithFunctions {
 	}
 
 	// Converts NMS function to SimpleFunctionWrapper
-	private final SimpleFunctionWrapper convertFunction(CommandFunction commandFunction) {
+	protected final SimpleFunctionWrapper convertFunction(CommandFunction commandFunction) {
 		ToIntFunction<CommandSourceStack> appliedObj = (CommandSourceStack css) -> this.<MinecraftServer>getMinecraftServer().getFunctions().execute(commandFunction, css);
 
 		Entry[] cArr = commandFunction.getEntries();

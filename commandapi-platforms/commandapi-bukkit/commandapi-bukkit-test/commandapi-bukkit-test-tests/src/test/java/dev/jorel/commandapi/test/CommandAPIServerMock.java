@@ -193,26 +193,12 @@ public class CommandAPIServerMock extends ServerMock {
 		super.addWorld(world);
 		return world;
 	}
-	
-	// TODO: Commenting this out for now because we've not sorted out 1.20.2
-	// support with MockBukkit, this almost certainly will require all sorts of
-	// hoops to jump through because apparently MockBukkit may have changed the
-	// method signature for this and we REALLY REALLY don't want to deal with
-	// that right now
-//	@Override
-//	public ItemFactory getItemFactory() {
-//		// Thanks MockBukkit, but we REALLY need to access
-//		// the raw CraftItemMeta objects for the ItemStackArgument <3
-//		return MockPlatform.getInstance().getItemFactory();
-//	}
 
-	// 1.16 and 1.17 MockServers do not implement this method, but other versions do
-	//  Easiest to just always override this method
-	//  This is copied from MockBukkit-v1.18
-	private final StandardMessenger messenger = new StandardMessenger();
 	@Override
-	public @NotNull Messenger getMessenger() {
-		return messenger;
+	public ItemFactory getItemFactory() {
+		// Thanks MockBukkit, but we REALLY need to access
+		// the raw CraftItemMeta objects for the ItemStackArgument <3
+		return MockPlatform.getInstance().getItemFactory();
 	}
 
 	/**

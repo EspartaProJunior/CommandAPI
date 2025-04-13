@@ -5,6 +5,7 @@ import be.seeseemelk.mockbukkit.enchantments.EnchantmentMock;
 import be.seeseemelk.mockbukkit.help.HelpMapMock;
 import be.seeseemelk.mockbukkit.potion.MockPotionEffectType;
 import com.google.common.collect.Streams;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.jorel.commandapi.Brigadier;
@@ -12,27 +13,36 @@ import dev.jorel.commandapi.CommandAPIBukkit;
 import dev.jorel.commandapi.SafeVarHandle;
 import dev.jorel.commandapi.commandsenders.AbstractCommandSender;
 import dev.jorel.commandapi.commandsenders.BukkitPlayer;
-import dev.jorel.commandapi.nms.NMS_1_20_R1;
+import dev.jorel.commandapi.nms.NMS_1_20_R2;
 import io.papermc.paper.advancement.AdvancementDisplay;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.repository.ServerPacksSource;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.profiling.metrics.profiling.InactiveMetricsRecorder;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -47,10 +57,10 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria.RenderType;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.craftbukkit.v1_20_R1.CraftParticle;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemFactory;
+import org.bukkit.craftbukkit.v1_20_R2.CraftRegistry;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemFactory;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -71,7 +81,7 @@ import java.util.stream.StreamSupport;
 
 import static org.mockito.ArgumentMatchers.*;
 
-public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implements Enums_1_20 {
+public class MockPlatform_1_20_2 extends MockPlatform<CommandSourceStack> implements Enums_1_20_2 {
 	private static final SafeVarHandle<HelpMapMock, Map<String, HelpTopic>> helpMapTopics =
 		SafeVarHandle.ofOrNull(HelpMapMock.class, "topics", "topics", Map.class);
 
@@ -91,7 +101,7 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 	private final Map<ResourceLocation, CommandFunction> functions = new HashMap<>();
 	private final Map<ResourceLocation, Collection<CommandFunction>> tags = new HashMap<>();
 
-	public MockPlatform_1_20() {
+	public MockPlatform_1_20_2() {
 		// Initialize WorldVersion (game version)
 		SharedConstants.tryDetectVersion();
 
@@ -112,6 +122,9 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 
 		this.recipeManager = new RecipeManager();
 		registerDefaultRecipes();
+
+		// Setup CraftBukkit registry
+		setupCraftBukkitRegistry();
 
 		// Setup playerListMock
 		playerListMock = Mockito.mock(PlayerList.class);
@@ -205,11 +218,32 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 
 	private void registerDefaultRecipes() {
 		@SuppressWarnings({"unchecked", "rawtypes"})
-		List<Recipe<?>> recipes = (List) getRecipes(MinecraftServer.class)
+		List<RecipeHolder<?>> recipes = (List) getRecipes(MinecraftServer.class)
 			.stream()
-			.map(p -> RecipeManager.fromJson(new ResourceLocation(p.first()), p.second()))
+			.map(p -> RecipeManagerAccess.publicFromJson(new ResourceLocation(p.first()), p.second()))
 			.toList();
 		recipeManager.replaceRecipes(recipes);
+	}
+
+	private void setupCraftBukkitRegistry() {
+		if (CraftRegistry.getMinecraftRegistry() != null) return;
+		// Copied from the Paper 1.20.2 source, `org.bukkit.support.AbstractTestingBase`
+
+		// Populate available packs
+		PackRepository resourceRepository = ServerPacksSource.createVanillaTrustedRepository();
+		resourceRepository.reload();
+		// Set up resource manager
+		MultiPackResourceManager resourceManager = new MultiPackResourceManager(PackType.SERVER_DATA, resourceRepository.getAvailablePacks().stream().map(Pack::open).toList());
+		// add tags and loot tables for unit tests
+		LayeredRegistryAccess<RegistryLayer> layers = RegistryLayer.createRegistryAccess();
+		layers = WorldLoader.loadAndReplaceLayer(resourceManager, layers, RegistryLayer.WORLDGEN, RegistryDataLoader.WORLDGEN_REGISTRIES);
+		RegistryAccess.Frozen REGISTRY_CUSTOM = layers.compositeAccess().freeze();
+		// Register vanilla pack
+		ReloadableServerResources DATA_PACK = ReloadableServerResources.loadResources(resourceManager, REGISTRY_CUSTOM, FeatureFlags.REGISTRY.allFlags(), Commands.CommandSelection.DEDICATED, 0, MoreExecutors.directExecutor(), MoreExecutors.directExecutor()).join();
+		// Bind tags
+		DATA_PACK.updateRegistryTags(REGISTRY_CUSTOM);
+
+		CraftRegistry.setMinecraftRegistry(REGISTRY_CUSTOM);
 	}
 
 	/**************************
@@ -218,12 +252,12 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 
 	@Override
 	protected CommandAPIBukkit<CommandSourceStack> createCommandAPIBukkitSpy() {
-		NMS_1_20_R1 nmsSpy = Mockito.spy(new NMS_1_20_R1());
+		NMS_1_20_R2 nmsSpy = Mockito.spy(new NMS_1_20_R2());
 
 		// Create CommandBuildContext - private static field
 		//  Some ArgumentTypes need this when constructed, and the normal COMMAND_BUILD_CONTEXT
 		//  is only defined for CraftServer instances, otherwise our field is null.
-		setField(NMS_1_20_R1.class, "COMMAND_BUILD_CONTEXT", null, new MockCommandBuildContext());
+		setField(NMS_1_20_R2.class, "COMMAND_BUILD_CONTEXT", null, new MockCommandBuildContext());
 
 		return nmsSpy;
 	}
@@ -416,7 +450,7 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 //				return bs;
 //			});
 			Mockito.when(css.getLevel().isInWorldBounds(any(BlockPos.class))).thenReturn(true);
-			Mockito.when(css.getAnchor()).thenReturn(EntityAnchorArgument.Anchor.EYES);
+			Mockito.when(css.getAnchor()).thenReturn(Anchor.EYES);
 
 			// Get mocked MinecraftServer
 			Mockito.when(css.getServer()).thenAnswer(s -> getMinecraftServer());
@@ -527,8 +561,11 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 
 	@Override
 	public org.bukkit.advancement.Advancement addAdvancement(NamespacedKey key) {
-		advancementDataWorld.advancements.advancements.put(new ResourceLocation(key.toString()),
-			new Advancement(new ResourceLocation(key.toString()), null, null, null, new HashMap<>(), null, false));
+		final Advancement advancement = new Advancement(Optional.empty(), Optional.empty(), null, new HashMap<>(), null, false);
+
+		// Redeclare as a new map to prevent immutability issues with Map.of() definition
+		advancementDataWorld.advancements = new HashMap<>(advancementDataWorld.advancements);
+		advancementDataWorld.advancements.put(new ResourceLocation(key.toString()), new AdvancementHolder(new ResourceLocation(key.toString()), advancement));
 		return new org.bukkit.advancement.Advancement() {
 
 			@Override
@@ -644,8 +681,7 @@ public class MockPlatform_1_20 extends MockPlatform<CommandSourceStack> implemen
 		// change your mind, here's how to access it via the registry. This doesn't
 		// scale well for pre 1.19 versions though!
 		// BuiltInRegistries.PARTICLE_TYPE.getKey(CraftParticle.toNMS(particle).getType()).toString();
-		CraftParticle craftParticle = CraftParticle.valueOf(particle.name());
-		return MockPlatform.getFieldAs(CraftParticle.class, "minecraftKey", craftParticle, ResourceLocation.class).toString();
+		return particle.getKey().toString();
 	}
 
 	@Override

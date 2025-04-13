@@ -177,7 +177,7 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	private static final Field serverFunctionLibraryDispatcher;
 
 	// Derived from net.minecraft.commands.Commands;
-	private static final CommandBuildContext COMMAND_BUILD_CONTEXT;
+	private static CommandBuildContext COMMAND_BUILD_CONTEXT;
 
 	// Compute all var handles all in one go so we don't do this during main server
 	// runtime
@@ -267,7 +267,7 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	}
 
 	// Converts NMS function to SimpleFunctionWrapper
-	private final SimpleFunctionWrapper convertFunction(CommandFunction commandFunction) {
+	protected final SimpleFunctionWrapper convertFunction(CommandFunction commandFunction) {
 		ToIntFunction<CommandSourceStack> appliedObj = (CommandSourceStack css) -> this.<MinecraftServer>getMinecraftServer().getFunctions().execute(commandFunction, css);
 
 		Entry[] cArr = commandFunction.getEntries();
@@ -377,7 +377,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 						yield result;
 					}
 				} catch (CommandSyntaxException e) {
-					yield new ArrayList<org.bukkit.entity.Entity>();
+					if (allowEmpty) {
+						yield new ArrayList<org.bukkit.entity.Entity>();
+					} else {
+						throw e;
+					}
 				}
 			case ENTITYSELECTOR_MANY_PLAYERS:
 				try {

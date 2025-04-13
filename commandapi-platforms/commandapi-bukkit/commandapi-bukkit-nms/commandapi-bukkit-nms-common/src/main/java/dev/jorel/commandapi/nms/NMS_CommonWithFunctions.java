@@ -25,7 +25,6 @@ import static dev.jorel.commandapi.preprocessor.Unimplemented.REASON.*;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.ToIntFunction;
 
 import org.bukkit.NamespacedKey;
 
@@ -63,17 +62,7 @@ public abstract class NMS_CommonWithFunctions extends NMS_Common {
 	}
 
 	// Converts NMS function to SimpleFunctionWrapper
-	private SimpleFunctionWrapper convertFunction(CommandFunction commandFunction) {
-		ToIntFunction<CommandSourceStack> appliedObj = (CommandSourceStack css) -> this.<MinecraftServer>getMinecraftServer().getFunctions()
-			.execute(commandFunction, css);
-
-		CommandFunction.Entry[] cArr = commandFunction.getEntries();
-		String[] result = new String[cArr.length];
-		for (int i = 0, size = cArr.length; i < size; i++) {
-			result[i] = cArr[i].toString();
-		}
-		return new SimpleFunctionWrapper(fromResourceLocation(commandFunction.getId()), appliedObj, result);
-	}
+	protected abstract SimpleFunctionWrapper convertFunction(CommandFunction commandFunction);
 	
 	@Override
 	@Unimplemented(because = REQUIRES_CRAFTBUKKIT, classNamed = "CraftEntity")

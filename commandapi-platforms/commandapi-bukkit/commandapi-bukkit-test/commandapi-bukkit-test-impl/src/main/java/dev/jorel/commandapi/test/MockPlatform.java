@@ -64,8 +64,6 @@ public abstract class MockPlatform<Source> implements Enums {
 	 * CommandAPIBukkit spy *
 	 ************************/
 
-	protected CommandAPIBukkit<Source> commandAPIBukkit;
-
 	public CommandAPIBukkit<Source> setupCommandAPIBukkit() {
 		// Set up a Mockito spy
 		//  We want to forward most methods to the original implementation so we
@@ -91,7 +89,6 @@ public abstract class MockPlatform<Source> implements Enums {
 		Mockito.doAnswer(i -> getHelpMap()).when(spy).getHelpMap();
 
 		// Inject spy
-		this.commandAPIBukkit = spy;
 		setField(CommandAPIBukkit.class, "instance", null, spy);
 
 		return spy;

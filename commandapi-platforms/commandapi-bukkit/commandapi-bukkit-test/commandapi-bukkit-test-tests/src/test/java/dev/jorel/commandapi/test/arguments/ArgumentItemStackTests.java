@@ -30,7 +30,6 @@ import dev.jorel.commandapi.test.TestBase;
 /**
  * Tests for the {@link ItemStackArgument}
  */
-@Disabled("Disabled due to MockBukkit 1.20 issue. See https://github.com/MockBukkit/MockBukkit/issues/862 for more information")
 class ArgumentItemStackTests extends TestBase {
 
 	/*********
