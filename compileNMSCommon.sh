@@ -1,4 +1,4 @@
-echo "Compiling NMS_Common for Spigot 1.20.1..."
+echo "Compiling NMS_Common for Spigot 1.20 and 1.20.1..."
 mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_20_R1
 
 echo "Compiling NMS_Common for Spigot 1.20.2..."
