@@ -20,18 +20,8 @@
  *******************************************************************************/
 package dev.jorel.commandapi.nms;
 
-import static dev.jorel.commandapi.preprocessor.Unimplemented.REASON.*;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.ToIntFunction;
-
-import org.bukkit.NamespacedKey;
-
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import dev.jorel.commandapi.preprocessor.Differs;
 import dev.jorel.commandapi.preprocessor.Unimplemented;
 import dev.jorel.commandapi.wrappers.FunctionWrapper;
@@ -40,23 +30,17 @@ import net.minecraft.commands.CommandFunction;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import org.bukkit.NamespacedKey;
 
-/**
- * Common NMS code To ensure that this code actually works across all versions
- * of Minecraft that this is supposed to support (1.17+), you should be
- * compiling this code against all of the declared Maven profiles specified in
- * this submodule's pom.xml file, by running the following commands:
- * <ul>
- * <li><code>mvn clean package -pl :commandapi-bukkit-nms-common -P Platform.Bukkit,Spigot_1_19_3_R2</code></li>
- * <li><code>mvn clean package -pl :commandapi-bukkit-nms-common -P Platform.Bukkit,Spigot_1_19_R1</code></li>
- * <li><code>mvn clean package -pl :commandapi-bukkit-nms-common -P Platform.Bukkit,Spigot_1_18_2_R2</code></li>
- * <li><code>mvn clean package -pl :commandapi-bukkit-nms-common -P Platform.Bukkit,Spigot_1_18_R1</code></li>
- * <li><code>mvn clean package -pl :commandapi-bukkit-nms-common -P Platform.Bukkit,Spigot_1_17_R1</code></li>
- * </ul>
- * Any of these that do not work should be removed or implemented otherwise
- * (introducing another NMS_Common module perhaps?
- */
-public abstract class NMS_CommonWithFunctions extends NMS_Common {
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.ToIntFunction;
+
+import static dev.jorel.commandapi.preprocessor.Unimplemented.REASON.REQUIRES_CRAFTBUKKIT;
+import static dev.jorel.commandapi.preprocessor.Unimplemented.REASON.VERSION_SPECIFIC_IMPLEMENTATION;
+
+public abstract class NMS_CommonWithFunctions_1_20_R1 extends NMS_Common {
 
 	private static NamespacedKey fromResourceLocation(ResourceLocation key) {
 		return NamespacedKey.fromString(key.getNamespace() + ":" + key.getPath());
@@ -74,13 +58,8 @@ public abstract class NMS_CommonWithFunctions extends NMS_Common {
 		}
 		return new SimpleFunctionWrapper(fromResourceLocation(commandFunction.getId()), appliedObj, result);
 	}
-	
-	@Override
-	@Unimplemented(because = REQUIRES_CRAFTBUKKIT, classNamed = "CraftEntity")
-	public abstract FunctionWrapper[] getFunction(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException;
 
 	@Override
-	// TODO: This has its own implementation for 1.17, 1.18 and 1.18.2
 	public SimpleFunctionWrapper getFunction(NamespacedKey key) {
 		final ResourceLocation resourceLocation = new ResourceLocation(key.getNamespace(), key.getKey());
 		Optional<CommandFunction> commandFunctionOptional = this.<MinecraftServer>getMinecraftServer().getFunctions().get(resourceLocation);
@@ -94,7 +73,6 @@ public abstract class NMS_CommonWithFunctions extends NMS_Common {
 	}
 
 	@Override
-	// TODO: This has its own implementation for 1.17, 1.18 and 1.18.2
 	public Set<NamespacedKey> getFunctions() {
 		Set<NamespacedKey> result = new HashSet<>();
 		for (ResourceLocation resourceLocation : this.<MinecraftServer>getMinecraftServer().getFunctions().getFunctionNames()) {
@@ -102,10 +80,5 @@ public abstract class NMS_CommonWithFunctions extends NMS_Common {
 		}
 		return result;
 	}
-	
-	@Override
-	@Unimplemented(because = VERSION_SPECIFIC_IMPLEMENTATION, from = "1.18.2", to = "1.19")
-	@Differs(from = "1.18.2", by = "getTag() now returns a Collection<> instead of a Tag<>, so don't have to call .getValues()")
-	public abstract SimpleFunctionWrapper[] getTag(NamespacedKey key);
 	
 }

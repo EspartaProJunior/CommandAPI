@@ -40,6 +40,9 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 
 import dev.jorel.commandapi.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+import net.minecraft.commands.arguments.MessageArgument;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -227,6 +230,11 @@ public class NMS_1_20_R3 extends NMS_Common {
 	}
 
 	@Override
+	public ArgumentType<?> _ArgumentAdvancement() {
+		return ResourceLocationArgument.id();
+	}
+
+	@Override
 	public final ArgumentType<?> _ArgumentBlockPredicate() {
 		return BlockPredicateArgument.blockPredicate(COMMAND_BUILD_CONTEXT);
 	}
@@ -234,6 +242,11 @@ public class NMS_1_20_R3 extends NMS_Common {
 	@Override
 	public final ArgumentType<?> _ArgumentBlockState() {
 		return BlockStateArgument.block(COMMAND_BUILD_CONTEXT);
+	}
+
+	@Override
+	public ArgumentType<?> _ArgumentChatComponent() {
+		return ComponentArgument.textComponent();
 	}
 
 	@Override
@@ -260,6 +273,11 @@ public class NMS_1_20_R3 extends NMS_Common {
 	@Override
 	public final ArgumentType<?> _ArgumentItemStack() {
 		return ItemArgument.item(COMMAND_BUILD_CONTEXT);
+	}
+
+	@Override
+	public ArgumentType<?> _ArgumentRecipe() {
+		return ResourceLocationArgument.id();
 	}
 
 	@Override
@@ -366,6 +384,11 @@ public class NMS_1_20_R3 extends NMS_Common {
 	}
 
 	@Override
+	public Component getAdventureChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return GsonComponentSerializer.gson().deserialize(Serializer.toJson(MessageArgument.getMessage(cmdCtx, key)));
+	}
+
+	@Override
 	public NamedTextColor getAdventureChatColor(CommandContext<CommandSourceStack> cmdCtx, String key) {
 		final Integer color = ColorArgument.getColor(cmdCtx, key).getColor();
 		return color == null ? NamedTextColor.WHITE : NamedTextColor.namedColor(color);
@@ -414,6 +437,16 @@ public class NMS_1_20_R3 extends NMS_Common {
 	public CommandSourceStack getBrigadierSourceFromCommandSender(
 			AbstractCommandSender<? extends CommandSender> sender) {
 		return VanillaCommandWrapper.getListener(sender.getSource());
+	}
+
+	@Override
+	public BaseComponent[] getChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(MessageArgument.getMessage(cmdCtx, key)));
+	}
+
+	@Override
+	public BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(ComponentArgument.getComponent(cmdCtx, key)));
 	}
 
 	@Override
@@ -618,6 +651,11 @@ public class NMS_1_20_R3 extends NMS_Common {
 		ResourceLocation resourceLocation = ResourceLocationArgument.getId(cmdCtx, key);
 		return new CraftLootTable(fromResourceLocation(resourceLocation),
 				this.<MinecraftServer>getMinecraftServer().getLootData().getLootTable(resourceLocation));
+	}
+
+	@Override
+	public NamespacedKey getMinecraftKey(CommandContext<CommandSourceStack> cmdCtx, String key) {
+		return fromResourceLocation(ResourceLocationArgument.getId(cmdCtx, key));
 	}
 
 	@Differs(from = "1.20.1", by = "Uses CraftParticle#minecraftToBukkit instead of CraftParticle#toBukkit")

@@ -248,6 +248,11 @@ public class NMS_1_21_R1 extends NMS_Common {
 	}
 
 	@Override
+	public ArgumentType<?> _ArgumentAdvancement() {
+		return ResourceLocationArgument.id();
+	}
+
+	@Override
 	public final ArgumentType<?> _ArgumentBlockPredicate() {
 		return BlockPredicateArgument.blockPredicate(COMMAND_BUILD_CONTEXT);
 	}
@@ -291,6 +296,11 @@ public class NMS_1_21_R1 extends NMS_Common {
 	@Override
 	public final ArgumentType<?> _ArgumentParticle() {
 		return ParticleArgument.particle(COMMAND_BUILD_CONTEXT);
+	}
+
+	@Override
+	public ArgumentType<?> _ArgumentRecipe() {
+		return ResourceLocationArgument.id();
 	}
 
 	@Override
@@ -467,6 +477,11 @@ public class NMS_1_21_R1 extends NMS_Common {
 	@Override
 	public final BaseComponent[] getChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
 		return ComponentSerializer.parse(Serializer.toJson(MessageArgument.getMessage(cmdCtx, key), COMMAND_BUILD_CONTEXT));
+	}
+
+	@Override
+	public BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(ComponentArgument.getComponent(cmdCtx, key), COMMAND_BUILD_CONTEXT));
 	}
 
 	@Override

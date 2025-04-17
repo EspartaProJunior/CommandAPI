@@ -508,6 +508,11 @@ public class NMS_1_21_R3 extends NMS_Common {
 	}
 
 	@Override
+	public BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(ComponentArgument.getComponent(cmdCtx, key), COMMAND_BUILD_CONTEXT));
+	}
+
+	@Override
 	public final World getDimension(CommandContext<CommandSourceStack> cmdCtx, String key)
 			throws CommandSyntaxException {
 		return DimensionArgument.getDimension(cmdCtx, key).getWorld();

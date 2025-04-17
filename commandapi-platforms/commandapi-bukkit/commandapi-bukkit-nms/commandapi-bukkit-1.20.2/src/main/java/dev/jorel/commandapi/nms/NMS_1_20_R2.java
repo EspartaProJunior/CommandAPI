@@ -39,6 +39,8 @@ import java.util.function.ToIntFunction;
 
 import dev.jorel.commandapi.*;
 import dev.jorel.commandapi.wrappers.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.commands.arguments.*;
 import org.bukkit.Bukkit;
@@ -169,7 +171,7 @@ import net.minecraft.world.phys.Vec3;
 @RequireField(in = EntitySelector.class, name = "usesSelector", ofType = boolean.class)
 @RequireField(in = ItemInput.class, name = "tag", ofType = CompoundTag.class)
 @RequireField(in = ServerFunctionLibrary.class, name = "dispatcher", ofType = CommandDispatcher.class)
-public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
+public class NMS_1_20_R2 extends NMS_CommonWithFunctions_1_20_R2 {
 
 	private static final SafeVarHandle<SimpleHelpMap, Map<String, HelpTopic>> helpMapTopics;
 	private static final Field entitySelectorUsesSelector;
@@ -201,6 +203,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	}
 
 	@Override
+	public ArgumentType<?> _ArgumentAdvancement() {
+		return ResourceLocationArgument.id();
+	}
+
+	@Override
 	public final ArgumentType<?> _ArgumentBlockPredicate() {
 		return BlockPredicateArgument.blockPredicate(COMMAND_BUILD_CONTEXT);
 	}
@@ -208,6 +215,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	@Override
 	public final ArgumentType<?> _ArgumentBlockState() {
 		return BlockStateArgument.block(COMMAND_BUILD_CONTEXT);
+	}
+
+	@Override
+	public ArgumentType<?> _ArgumentChatComponent() {
+		return ComponentArgument.textComponent();
 	}
 
 	@Override
@@ -239,6 +251,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	@Override
 	public final ArgumentType<?> _ArgumentParticle() {
 		return ParticleArgument.particle(COMMAND_BUILD_CONTEXT);
+	}
+
+	@Override
+	public ArgumentType<?> _ArgumentRecipe() {
+		return ResourceLocationArgument.id();
 	}
 
 	@Override
@@ -295,6 +312,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	}
 
 	@Override
+	public Component getAdventureChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return GsonComponentSerializer.gson().deserialize(Serializer.toJson(MessageArgument.getMessage(cmdCtx, key)));
+	}
+
+	@Override
 	public NamedTextColor getAdventureChatColor(CommandContext<CommandSourceStack> cmdCtx, String key) {
 		final Integer color = ColorArgument.getColor(cmdCtx, key).getColor();
 		return color == null ? NamedTextColor.WHITE : NamedTextColor.namedColor(color);
@@ -338,6 +360,16 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	@Override
 	public CommandSourceStack getBrigadierSourceFromCommandSender(AbstractCommandSender<? extends CommandSender> sender) {
 		return VanillaCommandWrapper.getListener(sender.getSource());
+	}
+
+	@Override
+	public BaseComponent[] getChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(MessageArgument.getMessage(cmdCtx, key)));
+	}
+
+	@Override
+	public BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ComponentSerializer.parse(Serializer.toJson(ComponentArgument.getComponent(cmdCtx, key)));
 	}
 
 	@Override
@@ -502,6 +534,11 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 		return new CraftLootTable(fromResourceLocation(resourceLocation), this.<MinecraftServer>getMinecraftServer().getLootData().getLootTable(resourceLocation));
 	}
 
+	@Override
+	public NamespacedKey getMinecraftKey(CommandContext<CommandSourceStack> cmdCtx, String key) {
+		return fromResourceLocation(ResourceLocationArgument.getId(cmdCtx, key));
+	}
+
 	@Differs(from = "1.20.1", by = "Uses CraftParticle#minecraftToBukkit instead of CraftParticle#toBukkit")
 	@Override
 	public final ParticleData<?> getParticle(CommandContext<CommandSourceStack> cmdCtx, String key) {
@@ -589,6 +626,17 @@ public class NMS_1_20_R2 extends NMS_CommonWithFunctions {
 	@Override
 	public ScoreboardSlot getScoreboardSlot(CommandContext<CommandSourceStack> cmdCtx, String key) {
 		return ScoreboardSlot.ofMinecraft(ScoreboardSlotArgument.getDisplaySlot(cmdCtx, key).id());
+	}
+
+	@Override
+	public Collection<String> getScoreHolderMultiple(CommandContext<CommandSourceStack> cmdCtx, String key)
+		throws CommandSyntaxException {
+		return ScoreHolderArgument.getNames(cmdCtx, key);
+	}
+
+	@Override
+	public String getScoreHolderSingle(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
+		return ScoreHolderArgument.getName(cmdCtx, key);
 	}
 
 	@Override
