@@ -99,7 +99,7 @@
 			<plugin>
 				<groupId>net.md-5</groupId>
 				<artifactId>specialsource-maven-plugin</artifactId>
-				<version>1.2.4</version>
+				<version>2.0.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -135,6 +135,9 @@
 	<profiles>
 		<profile>
 			<id>Spigot_1_21_R4</id>
+			<properties>
+				<minecraft.mappings>1.21.5-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -147,6 +150,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_21_R3</id>
+			<properties>
+				<minecraft.mappings>1.21.4-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -159,6 +165,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_21_R2</id>
+			<properties>
+				<minecraft.mappings>1.21.3-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -171,6 +180,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_21_R1</id>
+			<properties>
+				<minecraft.mappings>1.21.1-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -183,6 +195,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_20_R4</id>
+			<properties>
+				<minecraft.mappings>1.20.6-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -195,6 +210,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_20_R3</id>
+			<properties>
+				<minecraft.mappings>1.20.4-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -207,6 +225,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_20_R2</id>
+			<properties>
+				<minecraft.mappings>1.20.2-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>org.spigotmc</groupId>
@@ -219,6 +240,9 @@
 		</profile>
 		<profile>
 			<id>Spigot_1_20_R1</id>
+			<properties>
+				<minecraft.mappings>1.20.1-R0.1-SNAPSHOT</minecraft.mappings>
+			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
