@@ -54,12 +54,10 @@ import net.minecraft.commands.arguments.coordinates.Vec2Argument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.item.FunctionArgument;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import org.bukkit.Axis;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -85,9 +83,6 @@ import java.util.function.Function;
  * versions.
  */
 public abstract class NMS_Common extends CommandAPIBukkit<CommandSourceStack> {
-	private static NamespacedKey fromResourceLocation(ResourceLocation key) {
-		return NamespacedKey.fromString(key.getNamespace() + ":" + key.getPath());
-	}
 
 	@Override
 	public final ArgumentType<?> _ArgumentAngle() {
