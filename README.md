@@ -398,6 +398,7 @@ This is the current roadmap for the CommandAPI (as of 1st April 2025):
 				<b>Bug Fixes:</b>
                 <ul>
                     <li>Fixes command unregistration not working on Paper</li>
+                    <li>Fixes the <code>ObjectiveArgument</code> and <code>TeamArgument</code> not working correctly</li>
                 </ul>
             </td>
         </tr>
