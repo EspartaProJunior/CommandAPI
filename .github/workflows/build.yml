@@ -42,47 +42,8 @@ jobs:
 
       ### Check NMS_Common compiles against all compatible Minecraft versions
 
-      - name: Compile NMS_Common for 1.20 and 1.20.1
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_20_R1
-
-      - name: Compile NMS_Common for 1.20.2
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_20_R2
-
-      - name: Compile NMS_Common for 1.20.3 and 1.20.4
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_20_R3
-
-      - name: Compile NMS_Common for 1.20.5 and 1.20.6
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_20_R4
-
-      - name: Compile NMS_Common for 1.21 and 1.21.1
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_21_R1
-
-      - name: Compile NMS_Common for 1.21.2 and 1.21.3
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_21_R2
-
-      - name: Compile NMS_Common for 1.21.4
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_21_R3
-
-      - name: Compile NMS_Common for 1.21.5
-        run: mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,Spigot_1_21_R4
-
-      # - name: validate version-specific dependencies (nms-common)
-      #   run: |
-      #     nms_common_path="commandapi-platforms/commandapi-bukkit/commandapi-bukkit-nms/commandapi-bukkit-nms-common/target/classes/dev/jorel/commandapi/nms/NMS_Common.class"
-      #     if ! command -v javap &> /dev/null
-      #     then
-      #         echo "javap could not be found, skipping NMS Common validation check"
-      #         exit
-      #     else
-      #         javapcommand=$(javap -v $nms_common_path | grep -E '#[0-9]+ = Class ' | cut -c 46- | sort | grep 'org/bukkit/craftbukkit')
-      #         if [[ -n "$javapcommand" ]]; then
-      #             echo "NMS Common has version-specific dependencies!"
-      #             echo $javapcommand
-      #             exit 1
-      #         else
-      #             echo "NMS Common has no version-specific dependencies :)"
-      #         fi
-      #     fi
+      - name: Check NMS_Common compiles identically for all versions
+        run: ./compileNMSCommon.sh
 
       ### Bukkit tests across all NMS versions ###
       # Dev note: Yes, I know I could put this under one run section, but it's a million times easier
