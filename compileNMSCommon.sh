@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Make sure we are running at the script's location (CommandAPI root)
 cd "${0%/*}" || (echo "cd failed" && exit)
 
@@ -12,12 +14,12 @@ rm -rf "$DIFF_DIR"
 mkdir -p "$DIFF_DIR"
 
 compileVersion() {
-	echo "Compiling NMS_Common for Spigot $1..."
+    echo "Compiling NMS_Common for Spigot $1..."
 
-	mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true \
-	-pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,"$2" --quiet
+    mvn clean package -Dmaven.source.skip=true -Dmaven.javadoc.skip=true \
+    -pl :commandapi-bukkit-nms-common -am -P Platform.Bukkit,"$2" --quiet
 
-	# Find the spigot-mapped jar
+    # Find the spigot-mapped jar
     for jar in "$BUILD_DIR"/CommandAPI-*.jar; do
         if [[ "$jar" != *"original-"* && "$jar" == *").jar" ]]; then
             echo "Found JAR: $jar"
@@ -27,13 +29,13 @@ compileVersion() {
     done
 
     if [ ! -e "$NEW_JAR" ]; then
-    	# Couldn't find the jar with NMS_Common, so compilation failed
-    	echo "Failed to compile $1"
+        # Couldn't find the jar with NMS_Common, so compilation failed
+        echo "Failed to compile $1"
 
-    	# Clean up
-    	rm -rf "$PREV_CLASSES"
-    	# Fail
-    	exit 1
+        # Clean up
+        rm -rf "$PREV_CLASSES"
+        # Fail
+        exit 1
     fi
 
     # Unzip jar so we can view the classes
@@ -42,25 +44,25 @@ compileVersion() {
 
     # Replace all class files with their bytecode so we can compare by text
     find "$NEW_CLASSES" -name "*.class" | while read -r class; do
-    	class_name="${class%.class}"
-    	echo "Getting bytecode for $class_name"
+        class_name="${class%.class}"
+        echo "Getting bytecode for $class_name"
 
-    	javap -c -p "$class" > "$class_name.txt"
-    	rm "$class"
+        javap -c -p "$class" > "$class_name.txt"
+        rm "$class"
     done
 
     if [ -d "$PREV_CLASSES" ]; then
-    	# Generate diff against the previous version to detect changes
-    	diff_file="$DIFF_DIR/$1.diff"
-    	git diff --no-index "$PREV_CLASSES" "$NEW_CLASSES" > "$diff_file"
-    	
-    	if [ ! -s "$diff_file" ]; then
-    		# diff file is empty, so no problems here
-    		echo "No changes in $1"
-    	    rm "$diff_file"
-    	fi
+        # Generate diff against the previous version to detect changes
+        diff_file="$DIFF_DIR/$1.diff"
+        git diff --no-index "$PREV_CLASSES" "$NEW_CLASSES" > "$diff_file"
+        
+        if [ ! -s "$diff_file" ]; then
+            # diff file is empty, so no problems here
+            echo "No changes in $1"
+            rm "$diff_file"
+        fi
 
-    	rm -r "$PREV_CLASSES"
+        rm -r "$PREV_CLASSES"
     fi
 
     # Make new classes the previous classes for the next try
@@ -89,7 +91,7 @@ else
     echo "Differences found!"
 
     for diff in "$DIFF_DIR"/*; do
-    	echo "=== $diff ==="
+        echo "=== $diff ==="
         cat "$diff"
     done
 
