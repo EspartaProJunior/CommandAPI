@@ -58,6 +58,9 @@ public class InternalConfig {
 	// The default command namespace
 	private final String namespace;
 
+	// Whether we should throw an exception when a packet cannot be sent
+	private final boolean reportFailedPacketSends;
+
 	/**
 	 * Creates an {@link InternalConfig} from a {@link CommandAPIConfig}
 	 * 
@@ -74,6 +77,7 @@ public class InternalConfig {
 		this.nbtContainerClass = config.nbtContainerClass;
 		this.nbtContainerConstructor = config.nbtContainerConstructor;
 		this.namespace = config.namespace;
+		this.reportFailedPacketSends = config.reportFailedPacketSends;
 	}
 
 	/**
@@ -153,5 +157,12 @@ public class InternalConfig {
 	 */
 	public String getNamespace() {
 		return namespace;
+	}
+
+	/**
+	 * @return Whether an exception is thrown when a packet cannot be sent
+	 */
+	public boolean shouldReportFailedPacketSends() {
+		return this.reportFailedPacketSends;
 	}
 }
