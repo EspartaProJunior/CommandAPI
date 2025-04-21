@@ -54,7 +54,7 @@ public class CommandAPIMain extends JavaPlugin {
 			.shouldHookPaperReload(fileConfig.getBoolean("hook-paper-reload"))
 			.skipReloadDatapacks(fileConfig.getBoolean("skip-initial-datapack-reload"))
 			.beLenientForMinorVersions(fileConfig.getBoolean("be-lenient-for-minor-versions"))
-			.reportFailedPacketSends(fileConfig.getBoolean("report-failed-packet-sends"));
+			.errorOnFailedPacketSends(fileConfig.getBoolean("error-on-failed-packet-sends"));
 
 		for (String pluginName : fileConfig.getStringList("skip-sender-proxy")) {
 			if (Bukkit.getPluginManager().getPlugin(pluginName) != null) {

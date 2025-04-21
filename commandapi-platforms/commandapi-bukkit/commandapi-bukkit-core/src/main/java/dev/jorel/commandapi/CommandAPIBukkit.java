@@ -504,10 +504,7 @@ public abstract class CommandAPIBukkit<Source> implements CommandAPIPlatform<Arg
 
 	@Override
 	public BukkitCommandAPIMessenger setupMessenger() {
-		messenger = new BukkitCommandAPIMessenger(
-			config.getPlugin(),
-			config.shouldReportFailedPacketSends()
-		);
+		messenger = new BukkitCommandAPIMessenger(config.getPlugin());
 		return messenger;
 	}
 

@@ -28,12 +28,10 @@ public class BukkitCommandAPIMessenger extends CommandAPIMessenger<Player, Playe
 	/**
 	 * Creates a new {@link BukkitCommandAPIMessenger}.
 	 *
-	 * @param plugin            The plugin sending and receiving messages.
-	 * @param reportFailedSends If true, {@link CommandAPIMessenger#sendPacket(Object, CommandAPIPacket)} will throw an exception
-	 *                          if it cannot send the requested packet. Otherwise, if false, that method will fail silently.
+	 * @param plugin The plugin sending and receiving messages.
 	 */
-	public BukkitCommandAPIMessenger(JavaPlugin plugin, boolean reportFailedSends) {
-		super(new BukkitPacketHandlerProvider(), reportFailedSends);
+	public BukkitCommandAPIMessenger(JavaPlugin plugin) {
+		super(new BukkitPacketHandlerProvider());
 		this.plugin = plugin;
 
 		this.protocolVersionPerPlayer = new HashMap<>();

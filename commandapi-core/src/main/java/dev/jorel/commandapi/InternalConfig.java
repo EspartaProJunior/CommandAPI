@@ -59,7 +59,7 @@ public class InternalConfig {
 	private final String namespace;
 
 	// Whether we should throw an exception when a packet cannot be sent
-	private final boolean reportFailedPacketSends;
+	private final boolean errorOnFailedPacketSends;
 
 	/**
 	 * Creates an {@link InternalConfig} from a {@link CommandAPIConfig}
@@ -77,7 +77,7 @@ public class InternalConfig {
 		this.nbtContainerClass = config.nbtContainerClass;
 		this.nbtContainerConstructor = config.nbtContainerConstructor;
 		this.namespace = config.namespace;
-		this.reportFailedPacketSends = config.reportFailedPacketSends;
+		this.errorOnFailedPacketSends = config.errorOnFailedPacketSends;
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class InternalConfig {
 	/**
 	 * @return Whether an exception is thrown when a packet cannot be sent
 	 */
-	public boolean shouldReportFailedPacketSends() {
-		return this.reportFailedPacketSends;
+	public boolean shouldErrorOnFailedPacketSends() {
+		return this.errorOnFailedPacketSends;
 	}
 }
