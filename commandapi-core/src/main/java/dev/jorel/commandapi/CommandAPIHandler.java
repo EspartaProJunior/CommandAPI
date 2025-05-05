@@ -369,36 +369,41 @@ extends AbstractArgument<?, ?, Argument, CommandSender>
 	}
 
 	/**
-	 * Checks if a sender has a given permission.
+	 * Checks if a sender has a given permission. If the {@code sender}
+	 * is {@code null}, this will always return {@code true}.
 	 * 
 	 * @param sender     the sender to check permissions of
 	 * @param permission the CommandAPI CommandPermission permission to check
 	 * @return true if the sender satisfies the provided permission
 	 */
 	static <CommandSender> boolean permissionCheck(AbstractCommandSender<? extends CommandSender> sender, CommandPermission permission, Predicate<CommandSender> requirements) {
-		boolean satisfiesPermissions;
 		if (sender == null) {
+			// We only expect the sender to be null when the sender is actually the
+			//  `io.papermc.paper.brigadier.NullCommandSender` (See CommandAPIBukkit#wrapCommandSender).
+			//  In this case, we always allow the sender to access the command.
+			return true;
+		}
+
+		boolean satisfiesPermissions;
+		if (permission.equals(CommandPermission.NONE)) {
+			// No permission set
 			satisfiesPermissions = true;
+		} else if (permission.equals(CommandPermission.OP)) {
+			// Op permission set
+			satisfiesPermissions = sender.isOp();
 		} else {
-			if (permission.equals(CommandPermission.NONE)) {
-				// No permission set
-				satisfiesPermissions = true;
-			} else if (permission.equals(CommandPermission.OP)) {
-				// Op permission set
-				satisfiesPermissions = sender.isOp();
+			final Optional<String> optionalPerm = permission.getPermission();
+			if (optionalPerm.isPresent()) {
+				satisfiesPermissions = sender.hasPermission(optionalPerm.get());
 			} else {
-				final Optional<String> optionalPerm = permission.getPermission();
-				if(optionalPerm.isPresent()) {
-					satisfiesPermissions = sender.hasPermission(optionalPerm.get());
-				} else {
-					satisfiesPermissions = true;
-				}
+				satisfiesPermissions = true;
 			}
 		}
+
 		if (permission.isNegated()) {
 			satisfiesPermissions = !satisfiesPermissions;
 		}
-		return satisfiesPermissions && requirements.test(sender == null ? null : sender.getSource());
+		return satisfiesPermissions && requirements.test(sender.getSource());
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
