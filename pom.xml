@@ -49,9 +49,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/JorelAli/CommandAPI.git</connection>
-		<developerConnection>scm:git:ssh://github.com:JorelAli/CommandAPI.git</developerConnection>
-		<url>https://github.com/JorelAli/CommandAPI/tree/master</url>
+		<connection>scm:git:git://github.com/CommandAPI/CommandAPI.git</connection>
+		<developerConnection>scm:git:ssh://github.com:CommandAPI/CommandAPI.git</developerConnection>
+		<url>https://github.com/CommandAPI/CommandAPI/tree/master</url>
 	</scm>
 
 	<modules>
