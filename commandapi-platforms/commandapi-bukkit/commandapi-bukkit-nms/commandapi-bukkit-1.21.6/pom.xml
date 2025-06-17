@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018, 2021 Jorel Ali (Skepter) - MIT License Permission is 
+<!-- Copyright 2024 Jorel Ali (Skepter) - MIT License Permission is 
 	hereby granted, free of charge, to any person obtaining a copy of this software 
 	and associated documentation files (the "Software"), to deal in the Software 
 	without restriction, including without limitation the rights to use, copy, 
@@ -15,7 +15,9 @@
 	ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 	DEALINGS IN THE SOFTWARE. -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<artifactId>commandapi-bukkit-nms</artifactId>
 		<groupId>dev.jorel</groupId>
@@ -23,11 +25,12 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>commandapi-bukkit-nms-common</artifactId>
+	<artifactId>commandapi-bukkit-1.21.6</artifactId>
 
 	<properties>
-		<minecraft.mappings>1.20.1-R0.1-SNAPSHOT</minecraft.mappings>
-		<spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
+		<minecraft.mappings>1.21.6-R0.1-SNAPSHOT</minecraft.mappings>
+		<spigot.version>1.21.6-R0.1-SNAPSHOT</spigot.version>
+		<paper.version>1.21.6-R0.1-SNAPSHOT</paper.version>
 	</properties>
 
 	<repositories>
@@ -47,21 +50,21 @@
 
 	<dependencies>
 		<!-- Spigot testing (for reflection checks) -->
-		<!-- <dependency>
+		
+		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
 			<version>${spigot.version}</version>
 			<scope>test</scope>
-		</dependency> -->
+		</dependency>
 		<!-- Spigot compilation -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
 			<version>${spigot.version}</version>
-			<scope>provided</scope>
 			<classifier>remapped-mojang</classifier>
+			<scope>provided</scope>
 		</dependency>
-
 		<!-- Libraries -->
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
@@ -77,10 +80,19 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>dev.jorel</groupId>
+			<artifactId>commandapi-bukkit-nms-common</artifactId>
+			<version>${project.version}</version>
+			<classifier>mojang-mapped</classifier>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Generate Mojang mapped jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -96,10 +108,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Generate Spigot mapped jar -->
 			<plugin>
 				<groupId>net.md-5</groupId>
 				<artifactId>specialsource-maven-plugin</artifactId>
-				<version>2.0.4</version>
+				<version>2.0.2</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -129,114 +142,26 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Allow code coverage -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>Spigot_1_21_R5</id>
-			<properties>
-				<minecraft.mappings>1.21.6-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.21.6-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.21.6-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.21.6</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_21_R4</id>
-			<properties>
-				<minecraft.mappings>1.21.5-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.21.5-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.21.5-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.21.5</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_21_R3</id>
-			<properties>
-				<minecraft.mappings>1.21.4-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.21.4-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.21.4-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.21.4</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_21_R2</id>
-			<properties>
-				<minecraft.mappings>1.21.3-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.21.3-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.21.3-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.21.3</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_21_R1</id>
-			<properties>
-				<minecraft.mappings>1.21.1-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.21.1-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.21.1-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.21.1</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_20_R4</id>
-			<properties>
-				<minecraft.mappings>1.20.6-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.20.6-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.20.6-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.20.6</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_20_R3</id>
-			<properties>
-				<minecraft.mappings>1.20.4-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.20.4-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.20.4-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.20.4</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_20_R2</id>
-			<properties>
-				<minecraft.mappings>1.20.2-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.20.2-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.20.2-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.20.2</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_20_R1</id>
-			<properties>
-				<minecraft.mappings>1.20.1-R0.1-SNAPSHOT</minecraft.mappings>
-				<spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
-				<paper.version>1.20.1-R0.1-SNAPSHOT</paper.version>
-			</properties>
-			<build>
-				<directory>${project.basedir}/target/1.20.1</directory>
-			</build>
-		</profile>
-		<profile>
-			<id>Spigot_1_20_R1_Release</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-	</profiles>
 </project>

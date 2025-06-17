@@ -29,6 +29,7 @@ import dev.jorel.commandapi.nms.NMS_1_21_R1;
 import dev.jorel.commandapi.nms.NMS_1_21_R2;
 import dev.jorel.commandapi.nms.NMS_1_21_R3;
 import dev.jorel.commandapi.nms.NMS_1_21_R4;
+import dev.jorel.commandapi.nms.NMS_1_21_R5;
 import org.bukkit.Bukkit;
 
 /**
@@ -60,7 +61,7 @@ public abstract class CommandAPIVersionHandler {
 
 		try {
 			if (CommandAPI.getConfiguration().shouldUseLatestNMSVersion()) {
-				return new LoadContext(new NMS_1_21_R4(), () -> {
+				return new LoadContext(new NMS_1_21_R5(), () -> {
 					CommandAPI.logWarning("Loading the CommandAPI with the latest and potentially incompatible NMS implementation.");
 					CommandAPI.logWarning("While you may find success with this, further updates might be necessary to fully support the version you are using.");
 				});
@@ -75,6 +76,7 @@ public abstract class CommandAPIVersionHandler {
 					case "1.21.2", "1.21.3" -> new NMS_1_21_R2();
 					case "1.21.4" -> new NMS_1_21_R3();
 					case "1.21.5" -> new NMS_1_21_R4();
+					case "1.21.6" -> new NMS_1_21_R5();
 					default -> null;
 				};
 				if (platform != null) {
@@ -83,7 +85,7 @@ public abstract class CommandAPIVersionHandler {
 				if (CommandAPI.getConfiguration().shouldBeLenientForMinorVersions()) {
 					final String currentMajorVersion = version.split("\\.")[1];
 					if (latestMajorVersion.equals(currentMajorVersion)) {
-						return new LoadContext(new NMS_1_21_R4(), () -> {
+						return new LoadContext(new NMS_1_21_R5(), () -> {
 							CommandAPI.logWarning("Loading the CommandAPI with a potentially incompatible NMS implementation.");
 							CommandAPI.logWarning("While you may find success with this, further updates might be necessary to fully support the version you are using.");
 						});
