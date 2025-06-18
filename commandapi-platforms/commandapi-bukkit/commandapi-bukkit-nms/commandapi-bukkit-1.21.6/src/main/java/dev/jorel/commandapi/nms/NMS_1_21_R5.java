@@ -116,6 +116,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.MinecraftServer.ReloadableResources;
@@ -142,6 +143,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.ScoreHolder;
@@ -327,8 +329,6 @@ public class NMS_1_21_R5 extends NMS_Common {
 		return new String[]{"1.21.5"};
 	}
 
-	;
-
 	private static String serializeNMSItemStack(ItemStack is) {
 		return new ItemInput(is.getItemHolder(), is.getComponentsPatch()).serialize(COMMAND_BUILD_CONTEXT);
 	}
@@ -339,7 +339,6 @@ public class NMS_1_21_R5 extends NMS_Common {
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	@Differs(from = "1.21.4", by = "particleOptionsTag.getAllKeys() -> particleOptionsTag.keySet()")
 	@Override
 	public final String convert(ParticleData<?> particle) {
 		final ParticleOptions particleOptions = CraftParticle.createParticleParam(particle.particle(), particle.data());
@@ -422,6 +421,7 @@ public class NMS_1_21_R5 extends NMS_Common {
 		return ResourceKeyArgument.getAdvancement(cmdCtx, key).toBukkit();
 	}
 
+	@Differs(from = "1.21.5", by = "#toJson is now implemented in this class")
 	@Override
 	public Component getAdventureChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
 		return GsonComponentSerializer.gson().deserialize(this.toJson(MessageArgument.getMessage(cmdCtx, key)));
@@ -433,7 +433,7 @@ public class NMS_1_21_R5 extends NMS_Common {
 		return color == null ? NamedTextColor.WHITE : NamedTextColor.namedColor(color);
 	}
 
-	@Differs(from = "1.21.4", by = "Uses getResolvedComponent instead of getComponent")
+	@Differs(from = "1.21.5", by = "#toJson is now implemented in this class")
 	@Override
 	public final Component getAdventureChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
 		return GsonComponentSerializer.gson()
@@ -471,11 +471,13 @@ public class NMS_1_21_R5 extends NMS_Common {
 		return VanillaCommandWrapper.getListener(sender.getSource());
 	}
 
+	@Differs(from = "1.21.5", by = "#toJson is now implemented in this class")
 	@Override
 	public final BaseComponent[] getChat(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
 		return ComponentSerializer.parse(this.toJson(MessageArgument.getMessage(cmdCtx, key)));
 	}
 
+	@Differs(from = "1.21.5", by = "#toJson is now implemented in this class")
 	@Override
 	public final BaseComponent[] getChatComponent(CommandContext<CommandSourceStack> cmdCtx, String key) throws CommandSyntaxException {
 		return ComponentSerializer.parse(this.toJson(ComponentArgument.getResolvedComponent(cmdCtx, key)));
@@ -874,6 +876,7 @@ public class NMS_1_21_R5 extends NMS_Common {
 		};
 	}
 
+	@Differs(from = "1.21.5", by = "Suggestion providers are per command context, not globally defined")
 	@Override
 	public SuggestionProvider<CommandSourceStack> getSuggestionProvider(SuggestionProviders provider) {
 		return switch (provider) {
@@ -889,10 +892,11 @@ public class NMS_1_21_R5 extends NMS_Common {
 			case ADVANCEMENTS -> (cmdCtx, builder) -> SharedSuggestionProvider.suggestResource(this.<MinecraftServer>getMinecraftServer().getAdvancements()
 				.getAllAdvancements().stream().map(AdvancementHolder::id), builder);
 			case LOOT_TABLES ->
-//			(cmdCtx, builder) -> {
-//			return SharedSuggestionProvider.suggestResource(
-//					this.<MinecraftServer>getMinecraftServer().reloadableRegistries().getKeys(Registries.LOOT_TABLE), builder);
-//		};
+				(cmdCtx, builder) -> {
+					// TODO: Test this actually works
+					final List<ResourceLocation> LootTableKeys = this.<MinecraftServer>getMinecraftServer().reloadableRegistries().lookup().lookupOrThrow(Registries.LOOT_TABLE).listElementIds().map(ResourceKey::location).toList();
+					return SharedSuggestionProvider.suggestResource(LootTableKeys, builder);
+				};
 			case BIOMES -> _ArgumentSyntheticBiome()::listSuggestions;
 			case ENTITIES -> (cmdCtx, builder) -> SharedSuggestionProvider.suggestResource(
 				BuiltInRegistries.ENTITY_TYPE
@@ -1094,6 +1098,7 @@ public class NMS_1_21_R5 extends NMS_Common {
 		}
 	}
 
+	@Differs(from = "1.21.5", by = "#toJson is now implemented in this class")
 	@Override
 	public Message generateMessageFromJson(String json) {
 		return this.fromJson(json);
