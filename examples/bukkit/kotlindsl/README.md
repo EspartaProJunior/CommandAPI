@@ -12,7 +12,7 @@ Key points:
   <dependency>
     <groupId>dev.jorel</groupId>
     <artifactId>commandapi-kotlin-bukkit</artifactId>
-    <version>10.1.0</version>
+    <version>10.2.0-SNAPSHOT</version>
   </dependency>
   ```
 
