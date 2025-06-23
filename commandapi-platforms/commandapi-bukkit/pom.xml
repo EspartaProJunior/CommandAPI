@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-bukkit</artifactId>
+	<name>CommandAPI - Bukkit support</name>
 	<packaging>pom</packaging>
 
 	<modules>

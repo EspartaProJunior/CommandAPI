@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-velocity-core</artifactId>
+	<name>CommandAPI - Velocity support core library</name>
 
 	<repositories>
 		<repository>

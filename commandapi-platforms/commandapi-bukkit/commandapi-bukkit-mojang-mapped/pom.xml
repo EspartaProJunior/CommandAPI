@@ -29,4 +29,5 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>commandapi-bukkit-mojang-mapped</artifactId>
+    <name>CommandAPI - Bukkit support Mojang-mapped version handler</name>
 </project>

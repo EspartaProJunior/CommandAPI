@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-bukkit-kotlin</artifactId>
+	<name>CommandAPI - Bukkit support in Kotlin</name>
 
 	<build>
 		<sourceDirectory>src/main/kotlin</sourceDirectory>

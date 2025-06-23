@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-velocity-shade</artifactId>
+	<name>CommandAPI - Velocity support shade library</name>
 
 	<dependencies>
 		<dependency>

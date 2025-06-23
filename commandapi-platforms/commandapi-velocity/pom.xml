@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-velocity</artifactId>
+	<name>CommandAPI - Velocity support</name>
 	<packaging>pom</packaging>
 
 	<modules>

@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-plugin</artifactId>
+	<name>CommandAPI - Shared plugin library</name>
 
 	<build>
 		<plugins>

@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-velocity-kotlin</artifactId>
+	<name>CommandAPI - Velocity support in Kotlin</name>
 
 	<build>
 		<sourceDirectory>src/main/kotlin</sourceDirectory>

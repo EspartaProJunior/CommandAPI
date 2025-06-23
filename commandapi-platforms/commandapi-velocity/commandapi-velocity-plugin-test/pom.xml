@@ -11,6 +11,7 @@
 	</parent>
 
 	<artifactId>commandapi-velocity-plugin-test</artifactId>
+	<name>CommandAPI - Velocity support plugin tests</name>
 
 	<repositories>
 		<repository>
