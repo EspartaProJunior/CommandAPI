@@ -268,7 +268,6 @@ public class NMS_1_21_R5 extends NMS_Common {
 		minecraftServerFuelValues = SafeVarHandle.ofOrNull(MinecraftServer.class, "aE", "fuelValues", FuelValues.class);
 	}
 
-	// TODO: Make sure this works as expected
 	// Implementation taken from io.papermc.paper.adventure.WrapperAwareSerializer#deserialize(Component)
 	private String toJson(net.minecraft.network.chat.Component component) {
 		MinecraftServer server = this.getMinecraftServer();
@@ -279,11 +278,7 @@ public class NMS_1_21_R5 extends NMS_Common {
 		return new Gson().toJson(element);
 	}
 
-	// TODO: Make sure this works as expected
 	private net.minecraft.network.chat.Component fromJson(String json) {
-		MinecraftServer server = this.getMinecraftServer();
-		RegistryAccess.Frozen access = server.registryAccess();
-		RegistryOps<JsonElement> ops = access.createSerializationContext(JsonOps.INSTANCE);
 		Pair<net.minecraft.network.chat.Component, JsonElement> result = ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, JsonParser.parseString(json))
 			.getOrThrow(s -> new RuntimeException("Failed to decode Component: " + json + "; " + s));
 		return result.getFirst();
