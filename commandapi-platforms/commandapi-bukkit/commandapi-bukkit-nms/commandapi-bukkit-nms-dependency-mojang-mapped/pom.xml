@@ -19,11 +19,12 @@
 	<parent>
 		<artifactId>commandapi-bukkit-nms</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.0.1</version>
+		<version>10.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>commandapi-bukkit-nms-dependency-mojang-mapped</artifactId>
+	<name>CommandAPI - Bukkit support Mojang-mapped NMS dependency</name>
 	<packaging>pom</packaging>
 
 	<dependencies>
@@ -36,6 +37,12 @@
 		</dependency>
 
 		<!-- NMS-specific implementations -->
+		<dependency>
+			<groupId>dev.jorel</groupId>
+			<artifactId>commandapi-bukkit-1.21.6</artifactId>
+			<version>${project.version}</version>
+			<classifier>mojang-mapped</classifier>
+		</dependency>
 		<dependency>
 			<groupId>dev.jorel</groupId>
 			<artifactId>commandapi-bukkit-1.21.5</artifactId>

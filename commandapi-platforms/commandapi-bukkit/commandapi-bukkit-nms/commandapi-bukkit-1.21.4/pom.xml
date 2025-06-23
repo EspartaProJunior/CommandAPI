@@ -21,11 +21,12 @@
 	<parent>
 		<artifactId>commandapi-bukkit-nms</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.0.1</version>
+		<version>10.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>commandapi-bukkit-1.21.4</artifactId>
+	<name>CommandAPI - Bukkit support for 1.21.4</name>
 
 	<properties>
 		<minecraft.mappings>1.21.4-R0.1-SNAPSHOT</minecraft.mappings>

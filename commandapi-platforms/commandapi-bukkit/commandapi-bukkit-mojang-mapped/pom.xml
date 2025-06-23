@@ -24,9 +24,10 @@
 	<parent>
 		<artifactId>commandapi-bukkit</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.0.1</version>
+		<version>10.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>commandapi-bukkit-mojang-mapped</artifactId>
+    <name>CommandAPI - Bukkit support Mojang-mapped version handler</name>
 </project>

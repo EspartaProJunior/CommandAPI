@@ -6,9 +6,12 @@
 	<parent>
 		<artifactId>commandapi-bukkit</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.0.1</version>
+		<version>10.1.0</version>
 	</parent>
+
 	<artifactId>commandapi-bukkit-core</artifactId>
+	<name>CommandAPI - Bukkit support core library</name>
+
 	<repositories>
 		<repository>
 			<id>minecraft-libraries</id>

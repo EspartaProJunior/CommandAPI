@@ -63,16 +63,17 @@ The list of what version of the CommandAPI you'll need to run on a specific vers
 | **1.19.2**         | 8.5.1 - 9.7.0                | 9.7.0                        | 16                                                        |
 | **1.19.3**         | 8.7.0 - 9.7.0                | 9.7.0                        | 16                                                        |
 | **1.19.4**         | 8.8.0 - 9.7.0                | 9.7.0                        | 16                                                        |
-| **1.20**           | 9.0.2 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.20.1**         | 9.0.3 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.20.2**         | 9.2.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.20.3, 1.20.4** | 9.3.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.20.5, 1.20.6** | 9.4.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.21**           | 9.5.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.21.1**         | 9.5.2 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.21.2, 1.21.3** | 9.6.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.21.4**         | 9.7.0 - 10.0.0               | 10.0.1                       | 17                                                        |
-| **1.21.5**         | 10.0.0 - 10.0.1              | 10.0.1                       | 17                                                        |
+| **1.20**           | 9.0.2 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.20.1**         | 9.0.3 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.20.2**         | 9.2.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.20.3, 1.20.4** | 9.3.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.20.5, 1.20.6** | 9.4.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.21**           | 9.5.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.21.1**         | 9.5.2 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.21.2, 1.21.3** | 9.6.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.21.4**         | 9.7.0 - 10.1.0               | 10.1.0                       | 17                                                        |
+| **1.21.5**         | 10.0.0 - 10.1.0              | 10.1.0                       | 17                                                        |
+| **1.21.6**         | 10.1.0                       | 10.1.0                       | 17                                                        |
 
 -----
 
@@ -392,10 +393,20 @@ This is the current roadmap for the CommandAPI (as of 1st April 2025):
     </thead>
     <tbody>
         <tr>
+            <td valign="top"><b>10.1.0</b></td>
+            <td valign="top">June 2025</td>
+            <td valign="top">
+                <b>Minecraft Version Changes:</b>
+                <ul>
+                    <li>Adds support for Minecraft 1.21.6</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td valign="top"><b>10.0.1</b></td>
             <td valign="top">May 2025</td>
             <td valign="top">
-				<b>Bug Fixes:</b>
+                <b>Bug Fixes:</b>
                 <ul>
                     <li>Fixes command unregistration not working on Paper</li>
                     <li>https://github.com/CommandAPI/CommandAPI/issues/645 Ignore requirements for null senders</li>
@@ -406,17 +417,17 @@ This is the current roadmap for the CommandAPI (as of 1st April 2025):
             <td valign="top"><b>10.0.0</b></td>
             <td valign="top">April 2025</td>
             <td valign="top">
-				<b>⚠️ This version is incompatible with any plugin that used the CommandAPI version 9.X.X or below! (See documentation for more information)</b><br>
+                <b>⚠️ This version is incompatible with any plugin that used the CommandAPI version 9.X.X or below! (See documentation for more information)</b><br>
                 <b>Minecraft Version Changes:</b>
                 <ul>
                     <li>Adds support for Minecraft 1.21.5</li>
                     <li>Drops support for Minecraft 1.16.5 - 1.19.4</li>
                 </ul>
-				<b>Java Version Changes:</b>
-				<ul>
+                <b>Java Version Changes:</b>
+                <ul>
                     <li>Change from requiring Java 16 to Java 17 (LTS)</li>
                 </ul>
-				<b>CommandAPI Changes:</b>
+                <b>CommandAPI Changes:</b>
                 <ul>
                     <li>https://github.com/CommandAPI/CommandAPI/pull/633 Adds an <code>AsyncOfflinePlayerArgument</code> to allow asynchronous fetching of an offline player</li>
                     <li>https://github.com/CommandAPI/CommandAPI/pull/636 The default namespace has been updated from <code>minecraft</code> to the plugin's name. If you are not shading, the default namespace is going to be <code>commandapi</code>. If you are shading, the default namespace is going to be your plugin's name.</li>
@@ -429,13 +440,13 @@ This is the current roadmap for the CommandAPI (as of 1st April 2025):
                     <li>https://github.com/CommandAPI/CommandAPI/issues/578, https://github.com/CommandAPI/CommandAPI/issues/583, https://github.com/CommandAPI/CommandAPI/pull/629 Fixes <code>Bukkit#dispatchCommand()</code> not working after Paper's Brigadier API changes</li>
                     <li>Fixes <code>PotionEffectArgument.NamespacedKey</code> not having suggestions in some versions</li>
                 </ul>
-				<b>Website Changes:</b>
-				<ul>
+                <b>Website Changes:</b>
+                <ul>
                     <li>The CommandAPI has a new website: https://commandapi.dev/</li>
-					<li>The CommandAPI has moved from https://github.com/JorelAli/CommandAPI to https://github.com/CommandAPI/CommandAPI</li>
+                	<li>The CommandAPI has moved from https://github.com/JorelAli/CommandAPI to https://github.com/CommandAPI/CommandAPI</li>
                     <li>The CommandAPI's documentation source code is now over at https://github.com/CommandAPI/docs</li>
                     <li>The CommandAPI's JavaDocs can be viewed over at https://javadocs.commandapi.dev</li>
-				</ul>
+                </ul>
             </td>
         </tr>
         <tr>

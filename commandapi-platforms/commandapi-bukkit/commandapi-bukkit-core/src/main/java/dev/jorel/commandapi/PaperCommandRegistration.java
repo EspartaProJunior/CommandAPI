@@ -73,7 +73,14 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 					commandNode = apiCommandMeta.getDeclaredConstructor(PluginMeta.class, String.class, List.class, String.class, boolean.class);
 					metaFieldHandle = SafeVarHandle.ofOrNull(CommandNode.class, "apiCommandMeta", "apiCommandMeta", apiCommandMeta);
 				} catch (ClassNotFoundException | NoSuchMethodException e2) {
-					commandNode = null;
+					try {
+						// If this happens, the boolean parameter was removed from APICommandMeta
+						Class<?> apiCommandMeta = Class.forName("io.papermc.paper.command.brigadier.APICommandMeta");
+						commandNode = apiCommandMeta.getDeclaredConstructor(PluginMeta.class, String. class, List.class, String.class);
+						metaFieldHandle = SafeVarHandle.ofOrNull(CommandNode.class, "apiCommandMeta", "apiCommandMeta", apiCommandMeta);
+					} catch (ClassNotFoundException |NoSuchMethodException e3) {
+						commandNode = null;
+					}
 				}
 			}
 		}
@@ -205,8 +212,17 @@ public class PaperCommandRegistration<Source> extends CommandRegistrationStrateg
 					CommandAPIBukkit.getConfiguration().getNamespace(), // Don't think this matters actually
 					false // Indicates a server side only command
 				));
-			} catch (ReflectiveOperationException e1) {
-				// This doesn't happen
+			} catch (ReflectiveOperationException | IllegalArgumentException e1) {
+				try {
+					metaField.set(node, pluginCommandNodeConstructor.newInstance(
+						CommandAPIBukkit.getConfiguration().getPlugin().getPluginMeta(),
+						getDescription(node.getLiteral()),
+						getAliasesForCommand(node.getLiteral()),
+						CommandAPIBukkit.getConfiguration().getNamespace() // Probably still doesn't matter
+					));
+				} catch (ReflectiveOperationException e2) {
+					// This doesn't happen
+				}
 			}
 		}
 	}

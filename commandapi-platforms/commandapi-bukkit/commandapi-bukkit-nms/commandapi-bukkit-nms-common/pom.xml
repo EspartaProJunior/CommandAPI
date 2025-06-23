@@ -19,11 +19,12 @@
 	<parent>
 		<artifactId>commandapi-bukkit-nms</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.0.1</version>
+		<version>10.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>commandapi-bukkit-nms-common</artifactId>
+	<name>CommandAPI - Bukkit support NMS common library</name>
 
 	<properties>
 		<minecraft.mappings>1.20.1-R0.1-SNAPSHOT</minecraft.mappings>
@@ -133,6 +134,17 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>Spigot_1_21_R5</id>
+			<properties>
+				<minecraft.mappings>1.21.6-R0.1-SNAPSHOT</minecraft.mappings>
+				<spigot.version>1.21.6-R0.1-SNAPSHOT</spigot.version>
+				<paper.version>1.21.6-R0.1-SNAPSHOT</paper.version>
+			</properties>
+			<build>
+				<directory>${project.basedir}/target/1.21.6</directory>
+			</build>
+		</profile>
 		<profile>
 			<id>Spigot_1_21_R4</id>
 			<properties>
