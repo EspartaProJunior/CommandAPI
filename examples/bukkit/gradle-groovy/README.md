@@ -7,7 +7,7 @@ Key points:
 - The `commandapi-bukkit-plugin` dependency is used:
 
   ```groovy
-  implementation 'dev.jorel:commandapi-bukkit-plugin:10.0.2-SNAPSHOT'
+  implementation 'dev.jorel:commandapi-bukkit-plugin:10.1.0'
   ```
 
 - In the plugin.yml, CommandAPI is listed as a depend:
