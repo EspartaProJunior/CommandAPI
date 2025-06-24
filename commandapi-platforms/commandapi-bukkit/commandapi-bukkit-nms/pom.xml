@@ -26,11 +26,11 @@
 	<parent>
 		<artifactId>commandapi-bukkit</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.2.0-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>commandapi-bukkit-nms</artifactId>
-	<name>CommandAPI - Bukkit support NMS library</name>
+	<name>Bukkit support NMS library</name>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -48,7 +48,6 @@
 
 		<!-- The thing you actually include -->
 		<module>commandapi-bukkit-nms-dependency</module>
-		<module>commandapi-bukkit-nms-dependency-mojang-mapped</module>
 	</modules>
 
 	<dependencies>

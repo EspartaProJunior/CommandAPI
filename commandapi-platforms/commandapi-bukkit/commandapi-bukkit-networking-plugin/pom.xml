@@ -6,11 +6,11 @@
 	<parent>
 		<artifactId>commandapi-bukkit</artifactId>
 		<groupId>dev.jorel</groupId>
-		<version>10.2.0-SNAPSHOT</version>
+		<version>11.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>commandapi-bukkit-networking-plugin</artifactId>
-	<name>CommandAPI - Bukkit support Velocity networking plugin</name>
+	<name>Bukkit support Velocity networking plugin</name>
 
 	<dependencies>
 		<dependency>

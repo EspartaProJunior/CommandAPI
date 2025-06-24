@@ -25,7 +25,7 @@
 
 	<groupId>dev.jorel</groupId>
 	<artifactId>commandapi</artifactId>
-	<version>10.2.0-SNAPSHOT</version>
+	<version>11.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>commandapi</name>
@@ -70,8 +70,9 @@
 
 		<!-- Outputs -->
 		<module>commandapi-annotations</module>
+		<module>commandapi-testing</module>
 
-		<!-- Code coverage reports -->
+        <!-- Code coverage reports -->
 		<!-- <module>commandapi-codecov</module> -->
 	</modules>
 
