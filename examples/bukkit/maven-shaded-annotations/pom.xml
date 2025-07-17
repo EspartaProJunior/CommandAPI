@@ -28,14 +28,14 @@
 		<dependency>
 			<groupId>dev.jorel</groupId>
 			<artifactId>commandapi-bukkit-shade</artifactId>
-			<version>10.1.1</version>
+			<version>10.1.2</version>
 		</dependency>
 
 		<!-- The CommandAPI dependency used for building commands with annotations -->
 		<dependency>
 			<groupId>dev.jorel</groupId>
 			<artifactId>commandapi-annotations</artifactId>
-			<version>10.1.1</version>
+			<version>10.1.2</version>
 			<scope>provided</scope>
 		</dependency>
 

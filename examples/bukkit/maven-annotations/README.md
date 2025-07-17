@@ -11,13 +11,13 @@ Key points:
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-bukkit-plugin</artifactId>
-          <version>10.1.1</version>
+          <version>10.1.2</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-annotations</artifactId>
-          <version>10.1.1</version>
+          <version>10.1.2</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>
